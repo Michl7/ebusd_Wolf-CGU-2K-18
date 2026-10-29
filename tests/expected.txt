@@ -1,0 +1,35 @@
+# Expected output of tests/inject-test.sh (ebusd 26.1)
+== decoding ==
+received update-read boiler BurnerStatus: 7;121;100;70.0
+received unknown BC cmd: 03fe050308020779648c80ffd8
+received update-read boiler BoilerStatus: 62.000;-40.000;24;55.000
+received update-read art ControllerStatus: 187;90.00;55.0
+received update-read art ControllerData: 55.000
+received update-read boiler ErrorBroadcast: E008
+received read boiler FlowTemp QQ=31: 45.0
+received read boiler FlowTemp2 QQ=31: 47.0
+received read boiler HwcTemp QQ=31: 54.2
+received read boiler BoilerTempSetpoint QQ=31: 62.0
+received read boiler HwcTempSetpoint QQ=31: 55.0
+received read boiler OutsideTemp QQ=31: -40.0
+received read boiler ErrorStatus QQ=31: 0
+received read boiler ModulationStatus QQ=31: 179
+received read boiler HG01_BurnerSwitchDiffTemp QQ=31: 8.0
+received read boiler HG02_BurnerPowerMinHeating QQ=31: 100
+received read boiler HG03_BurnerPowerMaxHwc QQ=31: 255
+received read boiler HG04_BurnerPowerMaxHeating QQ=31: 128
+received read boiler HG05_FrostProtectionTemp QQ=31: 2.0
+received read boiler HG06_PumpMode QQ=31: 0
+received read boiler HG07_PumpRunOnTimer QQ=31: 30
+received read boiler HG08_FlowTempMaxHeating QQ=31: 70.0
+received read boiler HG09_BurnerCycleLockTimer QQ=31: 7
+received read boiler HG13_InputE1Mode QQ=31: 1
+received read boiler HG14_OutputA1Mode QQ=31: 8
+received read boiler HG15_StorageHysteresisTemp QQ=31: 5.0
+received read boiler HG16_PumpPowerMin QQ=31: 45
+received read boiler HG17_PumpPowerMax QQ=31: 80
+received read boiler BurnerStarts QQ=31: 31644
+received read boiler OperatingHours QQ=31: 58861
+received read boiler BurnerHours QQ=31: 2436
+received read boiler ErrorHistoryLastStatus QQ=31: 8;31
+received read boiler ErrorHistoryLastHours QQ=31: 58832

@@ -1,0 +1,75 @@
+# ebusd configuration for Wolf CGU-2K-18 gas combi boiler with Wolf ART room controller
+# https://github.com/Michl7/ebusd_Wolf-CGU-2K-18 - GPL-3.0 - read only, use at your own risk
+#
+# Device identification: the boiler answers 0704 with manufacturer 0x40 (ENCON) and a non-ASCII device ID
+# (01 1c 00 20 01, no SW/HW version). ebusd therefore reports ID "" and picks encon/08.csv.
+# Addresses: boiler master 03 / slave 08, ART f1 (broadcasts) and 30 (parameter access), ebusd 31.
+#
+# Status of each value (see docs/): confirmed = verified by tests; probable = consistent observations, not proven.
+# Unknown numbers are not included.
+# All 5022 reads are plain "r" (read on demand). See config/README.md for a recommended polling setup.
+# Names contain temp/status/power/mode/timer/hours/starts so that the default ebusd mqtt-hassio.cfg filter passes them.
+#
+# type (r[1-9];w;u),circuit,name,[comment],[QQ],ZZ,PBSB,[ID],field1,part (m/s),datatypes/templates,divider/values,unit,comment
+
+# ---------------------------------------------------------------------------------------------
+# Broadcasts and ART <-> boiler telegrams (passive, no polling needed)
+# ---------------------------------------------------------------------------------------------
+
+# 0503 block 1 from the boiler, every ~20 s. Confirmed: Mode, StatusBits (pump 40, hot water 04, fault 80), Power, FlowTemp.
+# Probable: StatusBits 08 = flame, 30 = gas valves. Mode 3/5 = start phase steps (exact meaning open).
+u,boiler,BurnerStatus,burner status broadcast (0503 block 1),03,fe,0503,01,Mode,,UCH,,,0 off / 3 + 5 start phase / 6 ignition / 7 burner on / 8 fault / 10 shutdown phase,StatusBits,,UCH,,,bit field: 01 always / 04 hot water / 08 flame / 30 gas valves / 40 pump / 80 fault,Power,,UCH,,%,burner power relative to the allowed maximum (HG04 heating / HG03 hot water),FlowTemp,,UCH,2,°C,flow temperature 1 (same as FlowTemp read),,,IGN:3,,,constant 80 ff d8
+
+# 0800 boiler -> ART (03 -> f1). Confirmed: BoilerTempSetpoint = HG08 - HG01, OperatingStatus bit field, HwcTempSetpoint = echo of P03.
+# Probable: OutsideTemp (-40 = no outside sensor connected).
+u,boiler,BoilerStatus,boiler status to ART (0800),03,f1,0800,,BoilerTempSetpoint,,D2B,,°C,HG08 minus HG01 (5 after power-up for ~40 s; 40 in chimney sweep mode),OutsideTemp,,D2B,,°C,-40 = no outside sensor (probable),,,IGN:1,,,,OperatingStatus,,UCH,,,bit field: 01 hot water incl. ~60 s run-on / 02 heating active / 04 hot water draw detected / 08 no heat demand (input E1 open) / 10 burner off / 20+40 chimney sweep mode,HwcTempSetpoint,,D2B,,°C,hot water setpoint (echo of ART P03)
+
+# 0507 ART -> boiler (f1 -> 03), every ~10 s. FlowTempSetpoint (A01) is the ART maximum (90 °C), the boiler limits with HG08.
+u,art,ControllerStatus,ART setpoints to boiler (0507),f1,03,0507,,Status,,UCH,,,bb normal / aa chimney sweep mode,,,IGN:1,,,,FlowTempSetpoint,,SIN,16,°C,A01 (maximum - not the effective setpoint),,,IGN:3,,,,HwcTempSetpoint,,UCH,2,°C,P03 hot water setpoint,,,IGN:1,,,
+
+# 0800 ART -> boiler (f1 -> 03), every ~10 s. Values 1-3 unknown (normally 90 / 90 / 18), value 4 = P03.
+u,art,ControllerData,ART data to boiler (0800),f1,03,0800,,,,IGN:6,,,values 1-3 unknown,HwcTempSetpoint,,D2B,,°C,P03 hot water setpoint
+
+# fe01 error code from the boiler, sent only when the error state changes (not at start-up). Text e.g. "E008", "E000" = no error.
+# Text fields are not passed to Home Assistant by the default mqtt-hassio.cfg - use ErrorStatus (5022 0x0001) there.
+u,boiler,ErrorBroadcast,error code broadcast (fe01),03,fe,fe01,,Code,,STR:4,,,E + 3 digits,,,IGN:6,,,spaces
+
+# ---------------------------------------------------------------------------------------------
+# 5022 reads (manufacturer command, ebusd 31 -> boiler 08)
+# Request: xx LL HH = 16-bit number HHLL little-endian, first byte ignored (00 used here). Answer: 2 bytes little-endian.
+# ---------------------------------------------------------------------------------------------
+
+# Measurements and setpoints
+r,boiler,FlowTemp,flow temperature 1 (A02 on the ART; confirmed),,08,5022,000d00,value,,UIN,10,°C,
+r,boiler,FlowTemp2,flow temperature 2 near the heat exchanger (5022 0x0358; probable - 1-2 K warmer at standstill),,08,5022,005803,value,,SIN,10,°C,
+r,boiler,HwcTemp,hot water temperature (5022 0x0359; confirmed - follows P03 while drawing hot water),,08,5022,005903,value,,SIN,10,°C,
+r,boiler,BoilerTempSetpoint,restart setpoint HG08 - HG01 (5022 0x0002; confirmed),,08,5022,000200,value,,SIN,10,°C,
+r,boiler,HwcTempSetpoint,hot water setpoint P03 (5022 0x0003; confirmed),,08,5022,000300,value,,SIN,10,°C,
+r,boiler,OutsideTemp,outside temperature (5022 0x000c; probable - -40 = no sensor connected),,08,5022,000c00,value,,SIN,10,°C,
+r,boiler,ErrorStatus,current error code (5022 0x0001; confirmed - 0 = no error),,08,5022,000100,value,,UIN,,,
+r,boiler,ModulationStatus,modulation level (5022 0x0393; hypothesis - 179 = burner off),,08,5022,009303,value,,UIN,,,
+
+# Parameters HG01-HG17 (confirmed by the ART read order = menu order and by changing values on the ART)
+r,boiler,HG01_BurnerSwitchDiffTemp,HG01 burner switching differential (5022 0x0022),,08,5022,002200,value,,SIN,10,K,
+r,boiler,HG02_BurnerPowerMinHeating,HG02 lower burner power heating - raw 0-255 = 0-100 % (5022 0x015a),,08,5022,005a01,value,,UIN,,,raw value / 2.55 = %
+r,boiler,HG03_BurnerPowerMaxHwc,HG03 upper burner power hot water - raw 0-255 = 0-100 % (5022 0x0159),,08,5022,005901,value,,UIN,,,raw value / 2.55 = %
+r,boiler,HG04_BurnerPowerMaxHeating,HG04 upper burner power heating - raw 0-255 = 0-100 % (5022 0x013f),,08,5022,003f01,value,,UIN,,,raw value / 2.55 = %
+r,boiler,HG05_FrostProtectionTemp,HG05 / A09 frost protection limit (5022 0x0a00),,08,5022,00000a,value,,SIN,10,°C,
+r,boiler,HG06_PumpMode,HG06 pump operating mode (5022 0x0141),,08,5022,004101,value,,UIN,,,
+r,boiler,HG07_PumpRunOnTimer,HG07 boiler pump run-on time (5022 0x0142),,08,5022,004201,value,,UIN,,min,
+r,boiler,HG08_FlowTempMaxHeating,HG08 maximum boiler temperature heating TV-max (5022 0x0027),,08,5022,002700,value,,SIN,10,°C,
+r,boiler,HG09_BurnerCycleLockTimer,HG09 burner cycle lock (5022 0x0143),,08,5022,004301,value,,UIN,,min,
+r,boiler,HG13_InputE1Mode,HG13 configurable input E1 (5022 0x0a5b),,08,5022,005b0a,value,,UIN,,,
+r,boiler,HG14_OutputA1Mode,HG14 configurable output A1 (5022 0x0abf),,08,5022,00bf0a,value,,UIN,,,
+r,boiler,HG15_StorageHysteresisTemp,HG15 storage hysteresis (5022 0x0140),,08,5022,004001,value,,SIN,10,K,
+r,boiler,HG16_PumpPowerMin,HG16 heating circuit pump power minimum (5022 0x0155),,08,5022,005501,value,,UIN,,%,
+r,boiler,HG17_PumpPowerMax,HG17 heating circuit pump power maximum (5022 0x0156),,08,5022,005601,value,,UIN,,%,
+
+# Counters
+r,boiler,BurnerStarts,number of burner starts (5022 0x0226; confirmed),,08,5022,002602,value,,UIN,,,
+r,boiler,OperatingHours,operating hours mains on (5022 0x0228; confirmed - +1 per hour),,08,5022,002802,value,,UIN,,h,
+r,boiler,BurnerHours,burner hours (5022 0x022a; probable),,08,5022,002a02,value,,UIN,,h,
+
+# Error history HG80-89: 10 entries of 2 words in 0x022b-0x023e, newest last. Only the newest entry is defined here.
+r,boiler,ErrorHistoryLastStatus,newest error history entry (5022 0x023d),,08,5022,003d02,Code,,UCH,,,error code,Extra,,UCH,,,upper byte - meaning unknown
+r,boiler,ErrorHistoryLastHours,operating hour of the newest error history entry (5022 0x023e),,08,5022,003e02,value,,UIN,,h,compare with OperatingHours

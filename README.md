@@ -12,6 +12,7 @@ ebusd configuration CSV file for Wolf CGU-2K-18 with ART Thermostat
 | [`docs/`](docs/) | eBUS decoding: telegrams, 5022 numbers, parameters, error codes |
 | [`examples/`](examples/) | query examples (`ebusctl`, MQTT, Home Assistant) |
 | [`raw/`](raw/) | anonymised raw data (scan results, sample telegrams) |
+| [`tests/`](tests/) | offline test of the configuration with injected telegrams |
 
 ## Goal
 
@@ -32,13 +33,14 @@ All findings come from observing a real installation (telegram log, 5022 scans, 
 - [x] Add a disclaimer: no affiliation with Wolf, use at your own risk, writing parameters is not covered
 
 ### 2. ebusd configuration
-- [ ] Create a general `encon/08.csv` with **English** message and field names (manufacturer 0x40 = ENCON, boiler slave address 08)
-- [ ] Use neutral read types (`r`) and document a recommended polling setup separately (no installation-specific priorities)
-- [ ] Remove installation-specific values and HA-only naming tricks (`_status` / `_temp` suffixes) or explain them where needed for Home Assistant
-- [ ] Include only **confirmed** values by default; mark probable values clearly in the comments; leave unknown numbers out
-- [ ] Broadcasts: 0503 (burner status), 0507 / 0800 (ART ↔ boiler), fe01 (error code)
-- [ ] 5022 reads: flow temperatures, DHW temperature, error code, parameters HG01–HG17, counters, error history
-- [ ] Decide how to handle 5023 (parameter write): document only, no write definitions until tested
+- [x] Create a general [`encon/08.csv`](config/encon/08.csv) with **English** message and field names (manufacturer 0x40 = ENCON, boiler slave address 08)
+- [x] Use neutral read types (`r`) and document a recommended polling setup separately ([config/README.md](config/README.md))
+- [x] Remove installation-specific values and HA-only naming tricks – names chosen so that the default `mqtt-hassio.cfg` filter passes them
+- [x] Include only **confirmed** values by default; mark probable values clearly in the comments; leave unknown numbers out
+- [x] Broadcasts: 0503 (burner status), 0507 / 0800 (ART ↔ boiler), fe01 (error code)
+- [x] 5022 reads: flow temperatures, DHW temperature, setpoints, error code, parameters HG01–HG17, counters, newest error history entry
+- [x] Decide how to handle 5023 (parameter write): document only, no write definitions until tested
+- [x] Offline test with ebusd 26.1: `--checkconfig` and injected telegrams ([tests/](tests/))
 - [ ] Test the published CSV on the real installation (all values must arrive as before)
 
 ### 3. Documentation (English)
