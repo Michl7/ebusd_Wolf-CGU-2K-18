@@ -1,0 +1,22 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
+
+# ebusd telegram logs and databases (may contain installation data)
+*.db
+*.sqlite
+*.log
+
+# Local secrets / environment
+.env
+secrets.yaml
+*.local.*
+
+# TypeSpec / npm build output (if used later)
+node_modules/
+outcsv/
+outtsp/

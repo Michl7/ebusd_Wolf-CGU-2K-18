@@ -4,6 +4,15 @@ ebusd configuration CSV file for Wolf CGU-2K-18 with ART Thermostat
 
 > 🚧 **Work in progress** – this repository is being prepared and will be made public once the items below are done.
 
+## Repository structure
+
+| Path | Content |
+|---|---|
+| [`config/`](config/) | ebusd configuration (use as `--configpath`) |
+| [`docs/`](docs/) | eBUS decoding: telegrams, 5022 numbers, parameters, error codes |
+| [`examples/`](examples/) | query examples (`ebusctl`, MQTT, Home Assistant) |
+| [`raw/`](raw/) | anonymised raw data (scan results, sample telegrams) |
+
 ## Goal
 
 Everything someone needs to read data from a **Wolf CGU-2K-18** gas combi boiler (with **Wolf ART** room controller) over eBUS with [ebusd](https://github.com/john30/ebusd):
@@ -17,10 +26,10 @@ All findings come from observing a real installation (telegram log, 5022 scans, 
 ## To-Do
 
 ### 1. Repository setup
-- [ ] Choose a license (e.g. the same as [ebusd-configuration](https://github.com/john30/ebusd-configuration))
-- [ ] Define the folder structure (`config/`, `docs/`, `examples/`, `raw/`)
-- [ ] Add `.gitignore`
-- [ ] Add a disclaimer: no affiliation with Wolf, use at your own risk, writing parameters is not covered
+- [x] Choose a license – GPL-3.0, same as [ebusd-configuration](https://github.com/john30/ebusd-configuration)
+- [x] Define the folder structure (`config/`, `docs/`, `examples/`, `raw/`)
+- [x] Add `.gitignore`
+- [x] Add a disclaimer: no affiliation with Wolf, use at your own risk, writing parameters is not covered
 
 ### 2. ebusd configuration
 - [ ] Create a general `encon/08.csv` with **English** message and field names (manufacturer 0x40 = ENCON, boiler slave address 08)
@@ -60,3 +69,15 @@ All findings come from observing a real installation (telegram log, 5022 scans, 
 - [ ] Proofread English texts and links
 - [ ] Switch repository to public
 - [ ] Optional: announce in an issue at [john30/ebusd-configuration](https://github.com/john30/ebusd-configuration) (Wolf / ENCON support)
+
+## Disclaimer
+
+This is an independent community project. It is **not affiliated with, endorsed by or supported by** Wolf GmbH or any other manufacturer. All product names and trademarks belong to their respective owners.
+
+The information was obtained by observing the eBUS of one installation. It may be incomplete or wrong for other devices, firmware versions or configurations. **Use it at your own risk.**
+
+The configuration only **reads** values. Writing parameters to the boiler (eBUS command 5023) is documented for reference only and is **not covered**: wrong values can cause malfunction or damage. Changes to boiler parameters should only be made by a qualified heating engineer.
+
+## License
+
+[GPL-3.0](LICENSE)
