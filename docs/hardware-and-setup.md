@@ -6,8 +6,8 @@
 |---|---|
 | Wolf **CGU-2K-18** | gas combi boiler (instantaneous hot water, no storage tank), room-air dependent |
 | Wolf **ART** | analog room temperature controller with day program (ART 2A); sends setpoints, reads/writes boiler parameters |
-| eBUS adapter | network adapter with enhanced protocol (ebusd device `ens:<ip>:9999`) -> Elecrow eBUS Adapter Shield C6 Stick Edition | 
-| ebusd | 26.1 (tested); any version ≥ 24.1 should work |
+| eBUS adapter | Elecrow eBUS Adapter Shield C6 Stick Edition: network adapter with enhanced protocol (ebusd device `ens:<ip>:9999`) |
+| ebusd | 26.1 (tested) |
 
 The heat demand of this installation does **not** come over the eBUS: a room thermostat contact is wired to input **E1** of the boiler (parameter HG13 = 1 "room thermostat"). Open contact = no heating (and no heating pump). The ART still sends its setpoints on the bus.
 
@@ -48,15 +48,15 @@ Optional options:
 | Option | Use |
 |---|---|
 | `--enablehex` | allows raw requests `ebusctl hex …` (needed for own 5022 scans) |
-| `--pollinterval=SEC` | time between two polled messages (default 5 s) |
+| `--pollinterval=SEC` | time between two polled messages (default 5 s; about 6 s observed) |
 | `--mqttvar=filter-seen=1` | with the default Home Assistant integration (`mqtt-hassio.cfg`): stops the integration from polling every known message with priority up to 5 |
 
 Recommended polling setup and Home Assistant notes: see [`config/README.md`](../config/README.md).
 
 ### Home Assistant app
 
-With the ebusd app for Home Assistant (repository LukasGrebe/ha-addons), put the CSV for example to `/share/ebusconf/encon/08.csv` and add `--configpath=/share/ebusconf` to the app's command line options.
+With the ebusd app for Home Assistant (repository LukasGrebe/ha-addons), put the CSV, for example, in `/share/ebusconf/encon/08.csv` and add `--configpath=/share/ebusconf` to the app's command line options.
 
 ### Telegram log
 
-The Home Assistant app can store every telegram in an SQLite database (`sqlite_db` option). This log was the basis of the decoding: it allows to compare telegrams before and after an event (e.g. a parameter change on the ART).
+The Home Assistant app can store every telegram in an SQLite database (`sqlite_db` option). This log was the basis of the decoding: it allows comparing telegrams before and after an event (e.g. a parameter change on the ART).

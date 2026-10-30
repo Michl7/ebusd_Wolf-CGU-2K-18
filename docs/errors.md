@@ -47,7 +47,7 @@ Only error 8 has been observed so far (provoked, see below).
 | 1 (e.g. 0x023d) | low byte = **error code**, high byte = unknown (e.g. `a7`, `1f`) |
 | 2 (e.g. 0x023e) | **operating hour** of the error (compare 5022 0x0228 `OperatingHours`) |
 
-The error time is not stored as date: the error happened about `OperatingHours − ErrorHistoryLastHours` hours ago (accuracy ±1 h; test: error at 08:00, calculated ~07:00).
+The error time is not stored as date: the error happened about `OperatingHours − ErrorHistoryLastHours` hours ago (accuracy ±1 h; in the test the calculated time was about 1 h too early).
 
 ## Provoked error E008 (test)
 

@@ -20,7 +20,7 @@ Everything someone needs to read data from a **Wolf CGU-2K-18** gas combi boiler
 
 - a general, ready-to-use ebusd configuration (CSV)
 - a documented decoding of the eBUS traffic: which telegram, byte and number means what, and how certain each finding is
-- examples how to query the values (`ebusctl`, MQTT)
+- examples of how to query the values (`ebusctl`, MQTT)
 
 All findings come from observing a real installation (telegram log, 5022 scans, controlled tests on the ART and the boiler, gas meter readings) and from the Wolf installation manuals.
 
@@ -67,8 +67,8 @@ All findings come from observing a real installation (telegram log, 5022 scans, 
 - [x] Compare with the standard eBUS definitions and the official Wolf file (0503 has no standard definition there; 0507 / 0800 follow the standard) – [docs/standard-comparison.md](docs/standard-comparison.md)
 
 ### 6. Before going public
-- [ ] Privacy check: no IP addresses, URLs, tokens or personal data in files or history
-- [ ] Proofread English texts and links
+- [x] Privacy check: no IP addresses, URLs, tokens or personal data in files or history
+- [x] Proofread English texts and links
 - [ ] Switch repository to public
 - [ ] Optional: announce in an issue at [john30/ebusd-configuration](https://github.com/john30/ebusd-configuration) (Wolf / ENCON support)
 

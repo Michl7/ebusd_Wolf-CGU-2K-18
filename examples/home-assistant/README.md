@@ -56,7 +56,7 @@ Create them as template helpers (*Settings → Devices & services → Helpers �
 ### Gas consumption
 
 - The gas flow templates are an **estimate** (model in [docs/behaviour.md](../../docs/behaviour.md#gas-consumption-estimate)). Calibrate `factor` with your gas meter: read the meter before and after one burner run and compare with the integrated value.
-- For a consumption counter in m³ add an *Integral (Riemann sum)* helper per sensor (method *left*, time unit hours). The sum of both can be used in the energy dashboard as gas source (kWh = m³ × calorific value × state number of your gas supplier).
+- For a consumption counter in m³ add an *Integral (Riemann sum)* helper per sensor (method *left*, time unit hours). The sum of both can be used in the energy dashboard as gas source (kWh = m³ × calorific value × gas correction factor (German: Zustandszahl) of your gas supplier).
 
 ## 5. Notification on errors
 

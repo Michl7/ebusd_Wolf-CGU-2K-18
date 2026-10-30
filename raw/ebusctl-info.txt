@@ -1,4 +1,4 @@
-# ebusctl info and ebusctl scan result of the test installation (30.10.2026, ebusd 26.1, adapter IP removed)
+# ebusctl info and ebusctl scan result of the test installation (October 2026, ebusd 26.1, adapter IP removed)
 $ ebusctl info
 version: ebusd 26.1.26.1
 device: <adapter-ip>:9999, TCP, enhanced, firmware 1.1[6607].1[6607]

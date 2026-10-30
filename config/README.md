@@ -45,7 +45,7 @@ Notes:
 
 All 5022 messages are defined as plain `r` (read on demand) – nothing is polled by default. The broadcasts arrive without polling.
 
-ebusd polls messages that have a priority (`r1` … `r9`), one message every `--pollinterval` seconds (default 5–6 s per message). Every polled message makes the round longer: with 5 messages each value is read about every 30 s, with 20 messages only every ~2 min.
+ebusd polls messages that have a priority (`r1` … `r9`), one message every `--pollinterval` seconds (default 5 s; about 6 s per message observed). Every polled message makes the round longer: with 5 messages each value is read about every 30 s, with 20 messages only every ~2 min.
 
 Recommended setup:
 

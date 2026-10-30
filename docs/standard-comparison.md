@@ -1,6 +1,6 @@
 # Comparison with the official ebusd configuration
 
-Checked on 30.10.2026 against [john30/ebusd-configuration](https://github.com/john30/ebusd-configuration) (TypeSpec sources in `src/`).
+Checked in October 2026 against [john30/ebusd-configuration](https://github.com/john30/ebusd-configuration) (TypeSpec sources in `src/`).
 
 ## Device identification
 

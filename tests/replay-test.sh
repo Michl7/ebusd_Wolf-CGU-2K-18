@@ -1,6 +1,6 @@
 #!/bin/sh
 # Replays the real telegrams from raw/telegrams-24h.txt into ebusd and prints a summary of the decoded messages.
-# Usage: tests/replay-test.sh [path/to/ebusd]   (ebusd >= 24.1)
+# Usage: tests/replay-test.sh [path/to/ebusd]   (tested with ebusd 26.1)
 EBUSD=${1:-ebusd}
 BASE=$(cd "$(dirname "$0")/.." && pwd)
 TMP=${TMPDIR:-/tmp}

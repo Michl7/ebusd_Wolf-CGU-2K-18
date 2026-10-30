@@ -1,7 +1,7 @@
 #!/bin/sh
 # Offline test of config/encon/08.csv without an eBUS adapter.
 # Injects telegrams into ebusd and prints the decoded values.
-# Usage: tests/inject-test.sh [path/to/ebusd]   (ebusd >= 24.1)
+# Usage: tests/inject-test.sh [path/to/ebusd]   (tested with ebusd 26.1)
 #
 # Telegram format: master part / slave part  (QQ ZZ PB SB NN DD.. / NN DD..)
 # The values are typical values of the test installation (see tests/expected.txt).

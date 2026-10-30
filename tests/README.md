@@ -1,6 +1,6 @@
 # tests
 
-Offline tests of [`config/encon/08.csv`](../config/encon/08.csv). They need only an ebusd binary (≥ 24.1), no eBUS adapter: ebusd is started with an unreachable device and `--inject=stop`, decodes the given telegrams and stops.
+Offline tests of [`config/encon/08.csv`](../config/encon/08.csv). They need only an ebusd binary (tested with 26.1), no eBUS adapter: ebusd is started with an unreachable device and `--inject=stop`, decodes the given telegrams and stops.
 
 | Script | What it checks | Expected output |
 |---|---|---|
@@ -9,4 +9,4 @@ Offline tests of [`config/encon/08.csv`](../config/encon/08.csv). They need only
 
 ## Result (October 2026, ebusd 26.1)
 
-The real telegrams were decoded with this configuration **and** with the configuration that has been running on the test installation since October 2026 (German names, values shown in Home Assistant). All 390 telegrams known to both configurations gave **identical values**. The four parameters HG10, HG11, HG12 and HG21 were added later (values from the scan).
+The real telegrams were decoded with this configuration **and** with the configuration running on the test installation (German names, values shown in Home Assistant). All 390 telegrams known to both configurations gave **identical values**. The four parameters HG10, HG11, HG12 and HG21 were added later (values from the scan).
