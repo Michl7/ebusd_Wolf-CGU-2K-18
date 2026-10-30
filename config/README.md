@@ -14,7 +14,7 @@ ebusd configuration for the **Wolf CGU-2K-18** (with Wolf ART). Only **reads** v
 3. ebusd scans the boiler, finds manufacturer 0x40 (ENCON) with an empty device ID and loads `encon/08.csv`.
    Check the log for: `read scan config file encon/08.csv for ID ""`.
 
-The file has been checked with ebusd 26.1 (`--checkconfig`) and with injected telegrams, see [`tests/`](../tests/).
+The file has been checked with ebusd 26.1 (`--checkconfig`) and with 390 real telegrams of the test installation, see [`tests/`](../tests/).
 
 ## Messages
 

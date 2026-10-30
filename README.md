@@ -41,7 +41,7 @@ All findings come from observing a real installation (telegram log, 5022 scans, 
 - [x] 5022 reads: flow temperatures, DHW temperature, setpoints, error code, parameters HG01–HG17, counters, newest error history entry
 - [x] Decide how to handle 5023 (parameter write): document only, no write definitions until tested
 - [x] Offline test with ebusd 26.1: `--checkconfig` and injected telegrams ([tests/](tests/))
-- [ ] Test the published CSV on the real installation (all values must arrive as before)
+- [x] Test with real data of the installation: 390 real telegrams (24 h) replayed – identical values to the configuration running there ([tests/](tests/))
 
 ### 3. Documentation (English)
 - [ ] Hardware and bus participants (addresses 03/08, ART f1/30, adapter type)
@@ -63,7 +63,7 @@ All findings come from observing a real installation (telegram log, 5022 scans, 
 
 ### 5. Verification and evidence
 - [ ] Read and add `ebusctl info` / scan result (device identification)
-- [ ] Add anonymised raw data: 5022 scan results, sample telegrams
+- [x] Add anonymised raw data: 5022 scan results, sample telegrams ([raw/](raw/))
 - [ ] Compare our 0503 interpretation with the standard eBUS definition
 
 ### 6. Before going public
