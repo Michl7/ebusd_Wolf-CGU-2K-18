@@ -57,8 +57,8 @@ All findings come from observing a real installation (telegram log, 5022 scans, 
 - [x] Confidence legend (✅ confirmed · 🟡 probable · ❓ unknown) – [docs/README.md](docs/README.md#confidence-legend)
 
 ### 4. Examples
-- [ ] `ebusctl` read and hex query examples
-- [ ] Optional: Home Assistant via MQTT discovery (filter notes for `mqtt-hassio.cfg`), example template for error text
+- [x] `ebusctl` read and hex query examples, MQTT topics – [examples/ebusctl.md](examples/ebusctl.md)
+- [x] Home Assistant via MQTT discovery: setup, entity IDs, slow-value automation, template sensors (error text, last error, operating mode/status, gas), error notification – [examples/home-assistant/](examples/home-assistant/)
 - [x] Optional: gas consumption estimate from burner power (with calibration note) – [docs/behaviour.md](docs/behaviour.md#gas-consumption-estimate)
 
 ### 5. Verification and evidence

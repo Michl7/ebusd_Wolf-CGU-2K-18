@@ -1,0 +1,5 @@
+{#- Template sensor "Boiler operating mode" - text for 0503 byte 2 (BurnerStatus Mode).
+    3 and 5 are start phase steps whose exact meaning is not confirmed. -#}
+{%- set mode = states('sensor.ebusd_boiler_burnerstatus_mode') | int(-1) -%}
+{%- set names = {0: 'Off', 3: 'Start phase', 5: 'Start phase', 6: 'Ignition', 7: 'Burner on', 8: 'Fault', 10: 'Shutdown phase'} -%}
+{{ names.get(mode, 'Unknown') }} ({{ mode }})

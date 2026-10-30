@@ -1,0 +1,11 @@
+{#- Template sensor "Boiler gas flow heating" (m³/h, device class volume_flow_rate, state class measurement).
+    Model (see docs/behaviour.md): max. flow = FACTOR x share(HG04), share from the power curve of the manual
+    (8 kW from 0 to 27 %, linear to 18 kW at 100 %). Gas flow = max. flow x Power / 100 while the burner runs (mode 6/7)
+    and the hot water bit 0x04 is not set. Calibrate FACTOR with your gas meter (test installation: 2.034). -#}
+{%- set factor = 2.034 -%}
+{%- set mode = states('sensor.ebusd_boiler_burnerstatus_mode') | int(-1) -%}
+{%- set power = states('sensor.ebusd_boiler_burnerstatus_power') | float(0) -%}
+{%- set bits = states('sensor.ebusd_boiler_burnerstatus_statusbits') | int(0) -%}
+{%- set hg = [[(states('sensor.ebusd_boiler_hg04_burnerpowermaxheating') | float(255)) / 2.55, 1] | max, 100] | min -%}
+{%- set share = (8 + 10 * ([hg - 27, 0] | max) / 73) / 18 -%}
+{%- if mode in [6, 7] and power > 0 and bits | bitwise_and(4) == 0 -%}{{ (factor * share * power / 100) | round(3) }}{%- else -%}0{%- endif -%}

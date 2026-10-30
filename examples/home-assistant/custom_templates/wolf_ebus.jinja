@@ -1,0 +1,6 @@
+{#- Wolf CGU-2K-18: shared macros. Copy to /config/custom_templates/wolf_ebus.jinja and run the action
+    homeassistant.reload_custom_templates. Use: {% from 'wolf_ebus.jinja' import error_text %} -#}
+{%- macro error_text(code) -%}
+{%- set texts = {1:'TBV over-temperature', 4:'No flame formation', 5:'Flame failure during operation', 6:'TW over-temperature', 7:'TBA over-temperature (flue gas)', 8:'Flue gas damper does not switch', 10:'Flow sensor 2 defective', 11:'Flame simulation', 12:'Flow sensor 1 defective', 14:'Storage sensor defective', 15:'Outside sensor defective', 17:'Modulation current fault', 40:'System pressure switch', 41:'Flow monitoring', 45:'Flow sensor (hot water) defective', 46:'Hot water outlet temperature sensor defective', 52:'Maximum storage charging time exceeded', 78:'Collector sensor defective'} -%}
+{{- texts.get(code | int(-1), 'unknown error code') -}}
+{%- endmacro -%}

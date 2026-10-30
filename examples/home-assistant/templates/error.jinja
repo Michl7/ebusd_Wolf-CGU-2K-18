@@ -1,0 +1,12 @@
+{#- Template sensor "Boiler error" - current error as text.
+    Sources: ErrorStatus (5022 0x0001, polled) and the fault flag of BurnerStatus (mode 8 / status bit 0x80).
+    Needs custom_templates/wolf_ebus.jinja. -#}
+{% from 'wolf_ebus.jinja' import error_text %}
+{%- set code = states('sensor.ebusd_boiler_errorstatus') | int(-1) -%}
+{%- set mode = states('sensor.ebusd_boiler_burnerstatus_mode') | int(-1) -%}
+{%- set bits = states('sensor.ebusd_boiler_burnerstatus_statusbits') | int(-1) -%}
+{%- set flag = mode == 8 or (bits >= 0 and bits | bitwise_and(128) > 0) -%}
+{%- if code > 0 -%}Error {{ code }}: {{ error_text(code) }}
+{%- elif flag -%}Error (code not yet read)
+{%- elif code == 0 -%}No error
+{%- else -%}Unknown{%- endif -%}

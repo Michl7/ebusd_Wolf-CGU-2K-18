@@ -1,0 +1,49 @@
+# Automation: notify when the boiler reports an error and when it is cleared.
+# Uses the template sensor "Boiler error" from templates/error.jinja (here: sensor.boiler_error).
+# Replace notify.notify with your notification service (e.g. notify.mobile_app_<phone>).
+alias: Wolf CGU-2K-18 error notification
+description: Persistent notification and push message on boiler errors.
+mode: queued
+max: 5
+triggers:
+  - trigger: state
+    entity_id: sensor.boiler_error
+    not_to: ["No error", "Unknown", "unknown", "unavailable"]
+    for:
+      seconds: 5
+    id: error
+    note: wait 5 s - the sensor may show "Error (code not yet read)" before the code arrives
+  - trigger: state
+    entity_id: sensor.boiler_error
+    to: "No error"
+    not_from: ["Unknown", "unknown", "unavailable"]
+    id: cleared
+    note: only a real reset, not the return after an ebusd restart
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: error
+        sequence:
+          - action: persistent_notification.create
+            data:
+              notification_id: boiler_error
+              title: "Boiler: error"
+              message: "{{ trigger.to_state.state }} (since {{ as_local(trigger.to_state.last_changed).strftime('%Y-%m-%d %H:%M:%S') }})"
+          - action: notify.notify
+            data:
+              title: "Boiler: error"
+              message: "{{ trigger.to_state.state }}"
+      - conditions:
+          - condition: trigger
+            id: cleared
+        sequence:
+          - action: persistent_notification.create
+            data:
+              notification_id: boiler_error
+              title: "Boiler: error cleared"
+              message: "{{ trigger.from_state.state }} – from {{ as_local(trigger.from_state.last_changed).strftime('%Y-%m-%d %H:%M:%S') }} to {{ as_local(trigger.to_state.last_changed).strftime('%H:%M:%S') }}"
+          - action: notify.notify
+            data:
+              title: "Boiler: error cleared"
+              message: "{{ trigger.from_state.state }}"

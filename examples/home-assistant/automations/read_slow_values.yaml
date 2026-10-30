@@ -1,0 +1,58 @@
+# Automation: read the slow values (parameters, counters, error history) once per hour via MQTT.
+# The 5022 messages of config/encon/08.csv are plain "r" (not polled by ebusd). Publishing an empty payload
+# to ebusd/<circuit>/<name>/get makes ebusd read the value and publish it on ebusd/<circuit>/<name>.
+# Requires ebusd with --mqttvar=filter-seen=1 (see config/README.md). Adjust the topic prefix if you changed --mqtttopic.
+alias: ebusd Wolf CGU-2K-18 read slow values
+description: Reads HG parameters, counters and the newest error history entry once per hour and after a (re)start.
+mode: single
+max_exceeded: silent
+triggers:
+  - trigger: time_pattern
+    minutes: 0
+    id: hourly
+  - trigger: homeassistant
+    event: start
+    id: start
+  - trigger: state
+    entity_id: binary_sensor.ebusd_global_running   # adjust to your entity ID
+    to: "on"
+    id: start
+actions:
+  - if:
+      - condition: trigger
+        id: start
+    then:
+      - delay:
+          minutes: 1
+        note: give ebusd and MQTT time after a start
+  - repeat:
+      for_each:
+        - HG01_BurnerSwitchDiffTemp
+        - HG02_BurnerPowerMinHeating
+        - HG03_BurnerPowerMaxHwc
+        - HG04_BurnerPowerMaxHeating
+        - HG05_FrostProtectionTemp
+        - HG06_PumpMode
+        - HG07_PumpRunOnTimer
+        - HG08_FlowTempMaxHeating
+        - HG09_BurnerCycleLockTimer
+        - HG13_InputE1Mode
+        - HG14_OutputA1Mode
+        - HG15_StorageHysteresisTemp
+        - HG16_PumpPowerMin
+        - HG17_PumpPowerMax
+        - BoilerTempSetpoint
+        - HwcTempSetpoint
+        - OutsideTemp
+        - BurnerStarts
+        - OperatingHours
+        - BurnerHours
+        - ErrorHistoryLastStatus
+        - ErrorHistoryLastHours
+      sequence:
+        - action: mqtt.publish
+          data:
+            topic: "ebusd/boiler/{{ repeat.item }}/get"
+            payload: ""
+        - delay:
+            seconds: 2

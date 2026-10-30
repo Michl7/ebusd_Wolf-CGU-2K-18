@@ -1,0 +1,19 @@
+{#- Template sensor "Boiler operating status" - text for the bit field 0800 byte 6 (BoilerStatus OperatingStatus).
+    01 hot water incl. run-on | 02 heating active | 04 hot water draw | 08 no heat demand | 10 burner off | 20/40 chimney sweep -#}
+{%- set v = states('sensor.ebusd_boiler_boilerstatus_operatingstatus') | int(-1) -%}
+{%- set sweep = v >= 0 and v | bitwise_and(96) > 0 -%}
+{%- set draw = v >= 0 and v | bitwise_and(4) > 0 -%}
+{%- set hwc = v >= 0 and v | bitwise_and(1) > 0 -%}
+{%- set demand = v >= 0 and v | bitwise_and(8) == 0 -%}
+{%- set off = v >= 0 and v | bitwise_and(16) > 0 -%}
+{%- set extra = ', heat demand' if demand else '' -%}
+{%- if v < 0 -%}{%- set label = 'Unknown' -%}
+{%- elif sweep -%}{%- set label = 'Chimney sweep mode' -%}
+{%- elif draw -%}{%- set label = 'Hot water draw' ~ extra -%}
+{%- elif hwc -%}{%- set label = 'Hot water run-on' ~ extra -%}
+{%- elif demand and off -%}{%- set label = 'Heating, burner pause' -%}
+{%- elif demand -%}{%- set label = 'Heating' -%}
+{%- elif off -%}{%- set label = 'Standby' -%}
+{%- else -%}{%- set label = 'Unknown' -%}
+{%- endif -%}
+{{ label }} ({{ v }})

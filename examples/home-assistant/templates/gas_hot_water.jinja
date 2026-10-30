@@ -1,0 +1,9 @@
+{#- Template sensor "Boiler gas flow hot water" (m³/h, device class volume_flow_rate, state class measurement).
+    Same model as gas_heating.jinja with HG03 and the hot water bit 0x04 set. Test installation: FACTOR 2.11. -#}
+{%- set factor = 2.11 -%}
+{%- set mode = states('sensor.ebusd_boiler_burnerstatus_mode') | int(-1) -%}
+{%- set power = states('sensor.ebusd_boiler_burnerstatus_power') | float(0) -%}
+{%- set bits = states('sensor.ebusd_boiler_burnerstatus_statusbits') | int(0) -%}
+{%- set hg = [[(states('sensor.ebusd_boiler_hg03_burnerpowermaxhwc') | float(255)) / 2.55, 1] | max, 100] | min -%}
+{%- set share = (8 + 10 * ([hg - 27, 0] | max) / 73) / 18 -%}
+{%- if mode in [6, 7] and power > 0 and bits | bitwise_and(4) > 0 -%}{{ (factor * share * power / 100) | round(3) }}{%- else -%}0{%- endif -%}
