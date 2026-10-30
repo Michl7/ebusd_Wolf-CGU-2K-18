@@ -15,7 +15,7 @@ Unconfirmed (🟡) and unknown (❓) values. Observations from other installatio
 | 0503 status bits `0x08` / `0x30` | flame / gas valves | |
 | 0503 bytes 6–8 `80 ff d8` | constant, probably "no sensor" | |
 | 0800 bits `0x02`, `0x10`, `0x20`/`0x40` | heating active, burner off, chimney sweep | `0x20` and `0x40` only seen together |
-| ART 0800 value 1 | flow setpoint (followed A01) | |
+| ART 0507 A01 / 0800 value 1 | flow setpoint, depends on the ART temperature knob | turn the knob in steps and compare; check whether the boiler reacts |
 
 ## Unknown (❓)
 

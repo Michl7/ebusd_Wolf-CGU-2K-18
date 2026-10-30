@@ -103,7 +103,7 @@ The fault state is **not** shown in this bit field.
 |---|---|---|---|
 | 1 | `Status` | `bb` normal, `aa` chimney sweep mode | ✅ |
 | 2 | – | `04` | ❓ |
-| 3–4 | `FlowTempSetpoint` (SIN / 16) | A01, normally 90 °C – the maximum of the analog ART, **not** the effective setpoint (the boiler limits with HG08) | ✅ |
+| 3–4 | `FlowTempSetpoint` (SIN / 16) | A01, 90 °C on the test installation – **not** the effective setpoint (the boiler limits with HG08). Changes when the temperature knob of the ART is turned (e.g. 83 °C) – relation still being investigated | ✅ / 🟡 |
 | 5–7 | – | `00 80 ff` | ❓ |
 | 8 | `HwcTempSetpoint` (UCH / 2) | P03 hot water setpoint | ✅ |
 | 9 | – | `ff` | ❓ |
@@ -114,7 +114,7 @@ The fault state is **not** shown in this bit field.
 
 | Bytes | Meaning | Status |
 |---|---|---|
-| 1–2 | 90 normally, 5 in chimney sweep mode; changed together with A01 in 0507 (e.g. 68.7 / 83 °C) – probably the flow setpoint | 🟡 |
+| 1–2 | 90 normally, 5 in chimney sweep mode; changed together with A01 in 0507 when the ART temperature knob was turned (e.g. 68.7 / 83 °C) – probably the flow setpoint | 🟡 |
 | 3–4 | 90 | ❓ |
 | 5–6 | 18 | ❓ |
 | 7–8 | `HwcTempSetpoint` = P03 (changes immediately when P03 is turned on the ART) | ✅ |
