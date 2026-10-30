@@ -1,6 +1,7 @@
 {#- Template sensor "Boiler last error" - newest entry of the error history with an approximate time.
     The boiler stores the operating hour, not a date: time = last change of OperatingHours - (OperatingHours - error hour), +-1 h.
-    (Not now(): now() changes the hour before the counter is read again, so the text would jump every hour.)
+    (Not now(): now() changes the hour before the counter is read again, so the text would jump every hour.
+    No "h ago" in the text: it would change the state every hour.)
     Needs custom_templates/wolf_ebus.jinja. -#}
 {% from 'wolf_ebus.jinja' import error_text %}
 {%- set code = states('sensor.ebusd_boiler_errorhistorylaststatus_code') | int(-1) -%}
@@ -9,5 +10,5 @@
 {%- if code > 0 and h_error > 0 and h_now >= h_error -%}
 {%- set ago = h_now - h_error -%}
 {%- set t = states.sensor.ebusd_boiler_operatinghours.last_changed | as_local - timedelta(hours=ago) -%}
-Error {{ code }}: {{ error_text(code) }} – about {{ ago }} h ago ({{ t.strftime('%Y-%m-%d') }} ~{{ t.strftime('%H') }}:00 ±1 h)
+Error {{ code }}: {{ error_text(code) }} ({{ t.strftime('%Y-%m-%d') }} ~{{ t.strftime('%H') }}:00 ±1 h)
 {%- elif code == 0 -%}No entry{%- else -%}Unknown{%- endif -%}
