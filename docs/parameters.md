@@ -32,7 +32,7 @@ Parameter list of the CGU-2K-18 (installation manual for the heating engineer). 
 | HG80–89 | error history | – | – | – | 0x022b–0x023e | see [errors.md](errors.md) | ✅ |
 | P03 (ART) | hot water setpoint | | | 55 °C | 0x0003, 0x03f4 | / 10 °C | ✅ |
 
-\* numbers from the official Wolf register file (`wolf/08..hc.tsp`), values match the factory settings; not visible on the ART, not confirmed by a change. See [standard-comparison.md](standard-comparison.md#wolf-register-file-wolf08hctsp).
+\* numbers from the official Wolf register file (`wolf/08..hc.tsp`), values match the factory settings; not visible on the ART, not confirmed by a change. Included in the configuration as `HG10_EbusAddressStatus`, `HG11_HwcQuickStartTemp`, `HG12_GasTypeMode`, `HG21_BoilerTempMin`. See [standard-comparison.md](standard-comparison.md#wolf-register-file-wolf08hctsp).
 
 The ART of the test installation shows and changes HG01–HG09 and HG13–HG17 (including HG02, HG03, HG15–HG17, although the boiler manual lists only the GB parameters for the ART). HG10–HG12 and HG20–HG25 are not shown.
 

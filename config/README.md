@@ -14,7 +14,7 @@ ebusd configuration for the **Wolf CGU-2K-18** (with Wolf ART). Only **reads** v
 3. ebusd scans the boiler, finds manufacturer 0x40 (ENCON) with an empty device ID and loads `encon/08.csv`.
    Check the log for: `read scan config file encon/08.csv for ID ""`.
 
-The file has been checked with ebusd 26.1 (`--checkconfig`) and with 390 real telegrams of the test installation, see [`tests/`](../tests/).
+The file has been checked with ebusd 26.1 (`--checkconfig`) and with 394 real telegrams of the test installation, see [`tests/`](../tests/).
 
 ## Messages
 
@@ -29,6 +29,7 @@ The file has been checked with ebusd 26.1 (`--checkconfig`) and with 390 real te
 | boiler | `FlowTemp2`, `OutsideTemp` | 5022 read | 🟡 |
 | boiler | `ModulationStatus` | 5022 read | 🟡 hypothesis |
 | boiler | `HG01_…` – `HG17_…` (14 parameters visible on the ART) | 5022 read | ✅ |
+| boiler | `HG10_EbusAddressStatus`, `HG11_HwcQuickStartTemp`, `HG12_GasTypeMode`, `HG21_BoilerTempMin` (not visible on the ART, numbers from the official Wolf file) | 5022 read | 🟡 |
 | boiler | `BurnerStarts`, `OperatingHours` | 5022 read | ✅ |
 | boiler | `BurnerHours` | 5022 read | 🟡 |
 | boiler | `ErrorHistoryLastStatus`, `ErrorHistoryLastHours` | 5022 read | ✅ (extra byte ❓) |

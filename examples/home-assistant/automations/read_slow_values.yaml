@@ -41,6 +41,10 @@ actions:
         - HG15_StorageHysteresisTemp
         - HG16_PumpPowerMin
         - HG17_PumpPowerMax
+        - HG10_EbusAddressStatus
+        - HG11_HwcQuickStartTemp
+        - HG12_GasTypeMode
+        - HG21_BoilerTempMin
         - BoilerTempSetpoint
         - HwcTempSetpoint
         - OutsideTemp

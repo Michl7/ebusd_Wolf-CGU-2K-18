@@ -1,5 +1,5 @@
 # Expected summary of tests/replay-test.sh (ebusd 26.1)
-decoded: 390  unknown: 0
+decoded: 394  unknown: 0
     173 received update-read boiler BurnerStatus
      49 received read boiler FlowTemp2
      49 received read boiler FlowTemp
@@ -14,11 +14,15 @@ decoded: 390  unknown: 0
       2 received update-read boiler ErrorBroadcast
       1 received read boiler OutsideTemp
       1 received read boiler HwcTempSetpoint
+      1 received read boiler HG21_BoilerTempMin
       1 received read boiler HG17_PumpPowerMax
       1 received read boiler HG16_PumpPowerMin
       1 received read boiler HG15_StorageHysteresisTemp
       1 received read boiler HG14_OutputA1Mode
       1 received read boiler HG13_InputE1Mode
+      1 received read boiler HG12_GasTypeMode
+      1 received read boiler HG11_HwcQuickStartTemp
+      1 received read boiler HG10_EbusAddressStatus
       1 received read boiler HG09_BurnerCycleLockTimer
       1 received read boiler HG08_FlowTempMaxHeating
       1 received read boiler HG07_PumpRunOnTimer

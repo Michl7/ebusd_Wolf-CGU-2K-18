@@ -55,6 +55,10 @@ Scanned ranges (read only): `0x0000–0x04ff` and `0x0a00–0x0aff`, raw data in
 | 0x0140 | HG15 storage hysteresis | / 10 K | ✅ |
 | 0x0155 | HG16 pump power minimum | % | ✅ |
 | 0x0156 | HG17 pump power maximum | % | ✅ |
+| 0x0178 | HG10 eBUS address (display only) | integer | 🟡 |
+| 0x016a | HG11 hot water quick start temperature | / 10 °C | 🟡 |
+| 0x016b | HG12 gas type | integer | 🟡 |
+| 0x001f | HG21 minimum boiler temperature TK-min | / 10 °C | 🟡 |
 
 How they were found: when scrolling through its parameter menu, the ART reads exactly these numbers with 5022 in **menu order** (HG01 0x0022, HG02 0x015a, HG03 0x0159, HG04 0x013f, HG05 0x0a00, HG06 0x0141, HG07 0x0142, HG08 0x0027, HG09 0x0143, HG13 0x0a5b, HG14 0x0abf, HG15 0x0140, HG16 0x0155, HG17 0x0156). Changing HG08, HG09, HG02 and HG15 on the ART confirmed the numbers. Details in [parameters.md](parameters.md).
 
@@ -62,7 +66,6 @@ Candidates for the parameters that the ART does not show (not confirmed):
 
 | Number | Value | Candidate |
 |---|---|---|
-| 0x001f | 40.0 | HG21 minimum boiler temperature TK-min (factory 40 °C) |
 | 0x0157 | 80 | HG22 maximum boiler temperature TK-max (factory 80 °C) |
 | 0x0168 / 0x0181 | 65 / 65.0 | HG23 maximum hot water temperature (factory 65 °C) – both stayed 65 when HG08 was changed |
 | 0x002d / 0x0158 | 20.0 / 20 | HG25 boiler over-temperature for storage charging (factory 20 K) |

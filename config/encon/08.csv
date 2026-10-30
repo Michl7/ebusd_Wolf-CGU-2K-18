@@ -67,6 +67,13 @@ r,boiler,HG15_StorageHysteresisTemp,HG15 storage hysteresis (5022 0x0140),,08,50
 r,boiler,HG16_PumpPowerMin,HG16 heating circuit pump power minimum (5022 0x0155),,08,5022,005501,value,,UIN,,%,
 r,boiler,HG17_PumpPowerMax,HG17 heating circuit pump power maximum (5022 0x0156),,08,5022,005601,value,,UIN,,%,
 
+# Parameters not visible on the ART (probable): numbers from the official Wolf register file (ebusd-configuration wolf/08..hc.tsp),
+# values on the test installation match the factory settings. Not confirmed by changing them.
+r,boiler,HG10_EbusAddressStatus,HG10 eBUS address - display only (5022 0x0178; probable),,08,5022,007801,value,,UIN,,,
+r,boiler,HG11_HwcQuickStartTemp,HG11 hot water quick start temperature - 10 = off (5022 0x016a; probable),,08,5022,006a01,value,,UIN,10,°C,
+r,boiler,HG12_GasTypeMode,HG12 gas type - 1 natural gas / 0 LPG (5022 0x016b; probable),,08,5022,006b01,value,,UIN,,,
+r,boiler,HG21_BoilerTempMin,HG21 minimum boiler temperature TK-min (5022 0x001f; probable),,08,5022,001f00,value,,SIN,10,°C,
+
 # Counters
 r,boiler,BurnerStarts,number of burner starts (5022 0x0226; confirmed),,08,5022,002602,value,,UIN,,,
 r,boiler,OperatingHours,operating hours mains on (5022 0x0228; confirmed - +1 per hour),,08,5022,002802,value,,UIN,,h,
