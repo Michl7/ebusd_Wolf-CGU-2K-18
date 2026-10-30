@@ -44,22 +44,22 @@ All findings come from observing a real installation (telegram log, 5022 scans, 
 - [x] Test with real data of the installation: 390 real telegrams (24 h) replayed – identical values to the configuration running there ([tests/](tests/))
 
 ### 3. Documentation (English)
-- [ ] Hardware and bus participants (addresses 03/08, ART f1/30, adapter type)
-- [ ] Setup guide: ebusd options (`--configpath`, optional `--enablehex`), where to put the CSV
-- [ ] Telegram reference: 0503, 0507, 0800, fe01, 0704 with byte layout and bit fields
-- [ ] 5022 reference: request format (`xx LL HH`, first byte ignored), number list (measurements, parameters, counters, error history) with confidence level
-- [ ] Parameter table HG01–HG17 with 5022 numbers and encoding (e.g. HG02–HG04 raw 0–255 = 0–100 %)
-- [ ] 5023 write format as observed from the ART (for reference only, with warning)
-- [ ] Operating modes and status bits (0503 byte 2/3), operating type bit field (0800 byte 6)
-- [ ] Error codes and error history format
-- [ ] Known behaviour: burner cycle lock (HG09), pump run-on (HG07), HG08 vs. HG22, DHW
-- [ ] Open questions / unknown values (so others can help)
-- [ ] Confidence legend (✅ confirmed · 🟡 probable · ❓ unknown)
+- [x] Hardware and bus participants (addresses 03/08, ART f1/30, adapter type) – [docs/hardware-and-setup.md](docs/hardware-and-setup.md)
+- [x] Setup guide: ebusd options (`--configpath`, optional `--enablehex`), where to put the CSV – [docs/hardware-and-setup.md](docs/hardware-and-setup.md#ebusd-setup)
+- [x] Telegram reference: 0503, 0507, 0800, fe01, 0704 with byte layout and bit fields – [docs/telegrams.md](docs/telegrams.md)
+- [x] 5022 reference: request format (`xx LL HH`, first byte ignored), number list with confidence level – [docs/5022-reference.md](docs/5022-reference.md)
+- [x] Parameter table HG01–HG25 with 5022 numbers and encoding – [docs/parameters.md](docs/parameters.md)
+- [x] 5023 write format as observed from the ART (for reference only, with warning) – [docs/5022-reference.md](docs/5022-reference.md#5023--parameter-write-reference-only)
+- [x] Operating modes and status bits (0503 byte 2/3), operating status bit field (0800 byte 6) – [docs/telegrams.md](docs/telegrams.md)
+- [x] Error codes and error history format – [docs/errors.md](docs/errors.md)
+- [x] Known behaviour: burner cycle lock (HG09), pump run-on (HG07), HG08 vs. HG22, hot water, power-up, gas estimate – [docs/behaviour.md](docs/behaviour.md)
+- [x] Open questions / unknown values (so others can help) – [docs/open-questions.md](docs/open-questions.md)
+- [x] Confidence legend (✅ confirmed · 🟡 probable · ❓ unknown) – [docs/README.md](docs/README.md#confidence-legend)
 
 ### 4. Examples
 - [ ] `ebusctl` read and hex query examples
 - [ ] Optional: Home Assistant via MQTT discovery (filter notes for `mqtt-hassio.cfg`), example template for error text
-- [ ] Optional: gas consumption estimate from burner power (with calibration note)
+- [x] Optional: gas consumption estimate from burner power (with calibration note) – [docs/behaviour.md](docs/behaviour.md#gas-consumption-estimate)
 
 ### 5. Verification and evidence
 - [ ] Read and add `ebusctl info` / scan result (device identification)
