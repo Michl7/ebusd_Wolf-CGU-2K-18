@@ -6,7 +6,7 @@
 |---|---|
 | Wolf **CGU-2K-18** | gas combi boiler (instantaneous hot water, no storage tank), room-air dependent |
 | Wolf **ART** | analog room temperature controller with day program (ART 2A); sends setpoints, reads/writes boiler parameters |
-| eBUS adapter | network adapter with enhanced protocol (ebusd device `ens:<ip>:9999`) |
+| eBUS adapter | network adapter with enhanced protocol (ebusd device `ens:<ip>:9999`) -> Elecrow eBUS Adapter Shield C6 Stick Edition | 
 | ebusd | 26.1 (tested); any version ≥ 24.1 should work |
 
 The heat demand of this installation does **not** come over the eBUS: a room thermostat contact is wired to input **E1** of the boiler (parameter HG13 = 1 "room thermostat"). Open contact = no heating (and no heating pump). The ART still sends its setpoints on the bus.
