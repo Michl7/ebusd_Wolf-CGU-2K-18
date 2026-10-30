@@ -24,7 +24,7 @@ The file has been checked with ebusd 26.1 (`--checkconfig`) and with 390 real te
 | boiler | `BoilerStatus` (BoilerTempSetpoint, OutsideTemp, OperatingStatus, HwcTempSetpoint) | 0800 boiler → ART | ✅ (OutsideTemp 🟡) |
 | boiler | `ErrorBroadcast` (text, e.g. `E008`) | broadcast fe01, only on change | ✅ |
 | art | `ControllerStatus` (Status, FlowTempSetpoint A01, HwcTempSetpoint P03) | 0507 ART → boiler | ✅ |
-| art | `ControllerData` (HwcTempSetpoint P03) | 0800 ART → boiler | ✅ |
+| art | `ControllerData` (FlowTempSetpoint, HwcTempSetpoint P03) | 0800 ART → boiler | ✅ |
 | boiler | `FlowTemp`, `HwcTemp`, `BoilerTempSetpoint`, `HwcTempSetpoint`, `ErrorStatus` | 5022 read | ✅ |
 | boiler | `FlowTemp2`, `OutsideTemp` | 5022 read | 🟡 |
 | boiler | `ModulationStatus` | 5022 read | 🟡 hypothesis |
