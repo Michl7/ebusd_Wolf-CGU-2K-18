@@ -64,7 +64,7 @@ Typical values:
 |---|---|---|---|---|---|
 | 1–2 | `BoilerTempSetpoint` (D2B) | 62 °C | 40 °C | **HG08 − HG01** (restart point); also 5022 0x0002 | ✅ |
 | 3–4 | `OutsideTemp` (D2B) | −40 °C | −40 °C | no outside sensor connected; also 5022 0x000c | 🟡 |
-| 5 | – | `00` | `00` | | |
+| 5 | – | `00` | `00` | forced performance (standard field) | ✅ |
 | 6 | `OperatingStatus` | 24 | 104 | bit field, see below | ✅ |
 | 7–8 | `HwcTempSetpoint` (D2B) | 55 °C | 40 °C | hot water setpoint = echo of ART P03; also 5022 0x0003 | ✅ |
 
@@ -72,8 +72,8 @@ Typical values:
 
 | Bit | Meaning | Status |
 |---|---|---|
-| `0x01` | hot water operation incl. ~60 s run-on after the draw | ✅ |
-| `0x02` | heating active (cleared while hot water has priority) | 🟡 |
+| `0x01` | hot water operation incl. ~60 s run-on after the draw (standard: hot water active) | ✅ |
+| `0x02` | heating active (cleared while hot water has priority; standard: heating active) | ✅ |
 | `0x04` | hot water draw detected (flow sensor, reacts within a second) | ✅ |
 | `0x08` | no heat demand (input E1 open) | ✅ |
 | `0x10` | burner off / not requested | 🟡 |
@@ -97,27 +97,29 @@ The fault state is **not** shown in this bit field.
 
 ## 0507 ART → boiler (`ControllerStatus`)
 
-`f1 → 03`, every ~10 s. Example: `bb 04 a0 05 00 80 ff 6e ff`
+`f1 → 03`, every ~10 s. Example: `bb 04 a0 05 00 80 ff 6e ff`. Standard eBUS telegram "burner operational data" – see [standard-comparison.md](standard-comparison.md#0507-burner-operational-data-art--boiler).
 
 | Byte | Field | Meaning | Status |
 |---|---|---|---|
-| 1 | `Status` | `bb` normal, `aa` chimney sweep mode | ✅ |
-| 2 | – | `04` | ❓ |
-| 3–4 | `FlowTempSetpoint` (SIN / 16) | A01, 90 °C on the test installation – **not** the effective setpoint (the boiler limits with HG08). Changes when the temperature knob of the ART is turned (e.g. 83 °C) – relation still being investigated | ✅ / 🟡 |
-| 5–7 | – | `00 80 ff` | ❓ |
+| 1 | `Status` | status heat request: `bb` = hot water + heating (normal), `aa` = heating only (chimney sweep mode) | ✅ |
+| 2 | – | action: `04` = consumers on | ✅ (standard) |
+| 3–4 | `FlowTempSetpoint` (SIN / 16 = D2C) | A01 boiler target temperature, 90 °C on the test installation – **not** the effective setpoint (the boiler limits with HG08). Changes when the temperature knob of the ART is turned (e.g. 83 °C) – relation still being investigated | ✅ / 🟡 |
+| 5–6 | – | target pressure, `00 80` = not available | ✅ (standard) |
+| 7 | – | setting degree, `ff` = not available | ✅ (standard) |
 | 8 | `HwcTempSetpoint` (UCH / 2) | P03 hot water setpoint | ✅ |
-| 9 | – | `ff` | ❓ |
+| 9 | – | fuel choice, `ff` | ✅ (standard) |
 
 ## 0800 ART → boiler (`ControllerData`)
 
-`f1 → 03`, every ~10 s. Example: `00 5a 00 5a 00 12 00 37` = D2B 90 / 90 / 18 / 55
+`f1 → 03`, every ~10 s. Example: `00 5a 00 5a 00 12 00 37`. Standard eBUS telegram "target values of the room controller" – same layout as the boiler's 0800.
 
-| Bytes | Meaning | Status |
-|---|---|---|
-| 1–2 | 90 normally, 5 in chimney sweep mode; changed together with A01 in 0507 when the ART temperature knob was turned (e.g. 68.7 / 83 °C) – probably the flow setpoint | 🟡 |
-| 3–4 | 90 | ❓ |
-| 5–6 | 18 | ❓ |
-| 7–8 | `HwcTempSetpoint` = P03 (changes immediately when P03 is turned on the ART) | ✅ |
+| Bytes | Field | Meaning | Status |
+|---|---|---|---|
+| 1–2 | `FlowTempSetpoint` (D2B) | boiler target temperature: 90 normally, 5 in chimney sweep mode; follows A01 when the ART knob is turned (e.g. 68.7 / 83 °C) | ✅ |
+| 3–4 | – | outside temperature field – the ART sends 90 (it has no outside sensor) | 🟡 |
+| 5 | – | forced performance, 0 | ✅ (standard) |
+| 6 | – | `0x12`: bit 1 heating active, bit 4 unknown | 🟡 |
+| 7–8 | `HwcTempSetpoint` (D2B) | P03 (changes immediately when P03 is turned on the ART) | ✅ |
 
 Changing P03 on the ART does **not** send a write command (5023): the new value is only sent in 0507 and 0800, and the boiler takes it over after 10–15 s (its 0800 `HwcTempSetpoint` and 5022 0x0003 follow).
 

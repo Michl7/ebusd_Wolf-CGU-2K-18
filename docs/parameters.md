@@ -15,22 +15,24 @@ Parameter list of the CGU-2K-18 (installation manual for the heating engineer). 
 | HG07 (GB07) | boiler pump run-on time | 0–30 min | 1 min | 30 min | 0x0142 | min | ✅ |
 | HG08 (GB08) | maximum boiler temperature heating (TV-max) | 40–90 °C | 80 °C | 70 °C | 0x0027 | / 10 °C | ✅ |
 | HG09 (GB09) | burner cycle lock | 1–20 min | 7 min | 7 min | 0x0143 | min | ✅ |
-| HG10 | eBUS address (display only) | 1–4 | 1 | – | – | – | |
-| HG11 | hot water quick start temperature | 10–60 °C | 10 °C (= off) | – | – | – | |
-| HG12 | gas type (1 natural gas, 0 LPG) | 0–1 | 1 | – | – | – | |
+| HG10 | eBUS address (display only) | 1–4 | 1 | – | 0x0178 (= 1)* | integer | 🟡 |
+| HG11 | hot water quick start temperature | 10–60 °C | 10 °C (= off) | – | 0x016a (= 10.0)* | / 10 °C | 🟡 |
+| HG12 | gas type (1 natural gas, 0 LPG) | 0–1 | 1 | – | 0x016b (= 1)* | integer | 🟡 |
 | HG13 (GB13) | configurable input E1 | 0–11 | 1 | 1 (room thermostat) | 0x0a5b | integer | ✅ |
 | HG14 (GB14) | configurable output A1 | 0–15 | 6 | 8 | 0x0abf | integer | ✅ |
 | HG15 (GB15) | storage hysteresis | 1–30 K | 5 K | 5 K | 0x0140 | / 10 K | ✅ |
 | HG16 | heating circuit pump power minimum | 20–100 % | 45 % | 45 % | 0x0155 | % | ✅ |
 | HG17 | heating circuit pump power maximum | 20–100 % | 80 % | 80 % | 0x0156 | % | ✅ |
 | HG20 | no function | – | 0 | – | – | – | |
-| HG21 | minimum boiler temperature TK-min | 40–60 °C (detail page: 20–60 °C) | 40 °C | – | 0x001f? | / 10 °C | ❓ |
+| HG21 | minimum boiler temperature TK-min | 40–60 °C (detail page: 20–60 °C) | 40 °C | – | 0x001f (= 40.0)* | / 10 °C | 🟡 |
 | HG22 | maximum boiler temperature TK-max | 50–90 °C | 80 °C (detail page shows 90) | – | 0x0157? | integer | ❓ |
 | HG23 (A14) | maximum hot water temperature (storage) | 60–80 °C | 65 °C | – | 0x0168 / 0x0181? | | ❓ |
 | HG25 | boiler over-temperature for storage charging | 0–40 K | 20 K | – | 0x002d / 0x0158? | | ❓ |
 | HG70 | collector sensor (display only) | – | – | – | – | – | |
 | HG80–89 | error history | – | – | – | 0x022b–0x023e | see [errors.md](errors.md) | ✅ |
 | P03 (ART) | hot water setpoint | | | 55 °C | 0x0003, 0x03f4 | / 10 °C | ✅ |
+
+\* numbers from the official Wolf register file (`wolf/08..hc.tsp`), values match the factory settings; not visible on the ART, not confirmed by a change. See [standard-comparison.md](standard-comparison.md#wolf-register-file-wolf08hctsp).
 
 The ART of the test installation shows and changes HG01–HG09 and HG13–HG17 (including HG02, HG03, HG15–HG17, although the boiler manual lists only the GB parameters for the ART). HG10–HG12 and HG20–HG25 are not shown.
 

@@ -24,11 +24,13 @@ u,boiler,BurnerStatus,burner status broadcast (0503 block 1),03,fe,0503,01,Mode,
 # Probable: OutsideTemp (-40 = no outside sensor connected).
 u,boiler,BoilerStatus,boiler status to ART (0800),03,f1,0800,,BoilerTempSetpoint,,D2B,,°C,HG08 minus HG01 (5 after power-up for ~40 s; 40 in chimney sweep mode),OutsideTemp,,D2B,,°C,-40 = no outside sensor (probable),,,IGN:1,,,,OperatingStatus,,UCH,,,bit field: 01 hot water incl. ~60 s run-on / 02 heating active / 04 hot water draw detected / 08 no heat demand (input E1 open) / 10 burner off / 20+40 chimney sweep mode,HwcTempSetpoint,,D2B,,°C,hot water setpoint (echo of ART P03)
 
-# 0507 ART -> boiler (f1 -> 03), every ~10 s. FlowTempSetpoint (A01) is the ART maximum (90 °C), the boiler limits with HG08.
-u,art,ControllerStatus,ART setpoints to boiler (0507),f1,03,0507,,Status,,UCH,,,bb normal / aa chimney sweep mode,,,IGN:1,,,,FlowTempSetpoint,,SIN,16,°C,A01 (maximum - not the effective setpoint),,,IGN:3,,,,HwcTempSetpoint,,UCH,2,°C,P03 hot water setpoint,,,IGN:1,,,
+# 0507 ART -> boiler (f1 -> 03), every ~10 s. Standard eBUS "burner operational data": status (bb hot water + heating / aa heating only), action,
+# boiler target temperature (A01 - the boiler limits with HG08), target pressure (n/a), setting degree (n/a), hot water target (P03), fuel.
+u,art,ControllerStatus,ART setpoints to boiler (0507),f1,03,0507,,Status,,UCH,,,bb hot water + heating / aa heating only (chimney sweep mode),,,IGN:1,,,,FlowTempSetpoint,,SIN,16,°C,A01 (maximum - not the effective setpoint),,,IGN:3,,,,HwcTempSetpoint,,UCH,2,°C,P03 hot water setpoint,,,IGN:1,,,
 
-# 0800 ART -> boiler (f1 -> 03), every ~10 s. Values 1-3 unknown (normally 90 / 90 / 18), value 4 = P03.
-u,art,ControllerData,ART data to boiler (0800),f1,03,0800,,,,IGN:6,,,values 1-3 unknown,HwcTempSetpoint,,D2B,,°C,P03 hot water setpoint
+# 0800 ART -> boiler (f1 -> 03), every ~10 s. Standard eBUS layout "target values of the room controller":
+# boiler target temperature, outside temperature (ART sends 90), forced performance, bits (hot water / heating active), hot water target.
+u,art,ControllerData,ART target values to boiler (0800),f1,03,0800,,FlowTempSetpoint,,D2B,,°C,boiler target temperature (follows A01),,,IGN:4,,,outside temperature field (90) / forced performance / status bits,HwcTempSetpoint,,D2B,,°C,P03 hot water setpoint
 
 # fe01 error code from the boiler, sent only when the error state changes (not at start-up). Text e.g. "E008", "E000" = no error.
 # Text fields are not passed to Home Assistant by the default mqtt-hassio.cfg - use ErrorStatus (5022 0x0001) there.

@@ -4,7 +4,7 @@ received update-read boiler BurnerStatus: 7;121;100;70.0
 received unknown BC cmd: 03fe050308020779648c80ffd8
 received update-read boiler BoilerStatus: 62.000;-40.000;24;55.000
 received update-read art ControllerStatus: 187;90.00;55.0
-received update-read art ControllerData: 55.000
+received update-read art ControllerData: 90.000;55.000
 received update-read boiler ErrorBroadcast: E008
 received read boiler FlowTemp QQ=31: 45.0
 received read boiler FlowTemp2 QQ=31: 47.0

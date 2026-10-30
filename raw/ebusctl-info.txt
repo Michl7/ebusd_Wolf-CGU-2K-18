@@ -1,0 +1,30 @@
+# ebusctl info and ebusctl scan result of the test installation (30.10.2026, ebusd 26.1, adapter IP removed)
+$ ebusctl info
+version: ebusd 26.1.26.1
+device: <adapter-ip>:9999, TCP, enhanced, firmware 1.1[6607].1[6607]
+signal: acquired
+symbol rate: 22
+max symbol rate: 69
+min arbitration micros: 4
+max arbitration micros: 770
+min symbol latency: 2
+max symbol latency: 46
+reconnects: 0
+masters: 3
+messages: 30
+conditional: 0
+poll: 5
+update: 5
+address 03: master #11
+address 08: slave #11, scanned "MF=ENCON;ID=  ;SW=-;HW=-"
+address 31: master #8, ebusd
+address 36: slave #8, ebusd
+address f1: master #10
+
+$ ebusctl scan result
+08;ENCON;  ;-;-
+
+# Notes
+# - The device ID consists of non-printable bytes and is shown as spaces -> ebusd uses ID "" and loads encon/08.csv.
+# - The ART's second address 30 only appears while its parameter menu is used.
+# - "messages: 30 / poll: 5" refers to the configuration running there at that time (German names, 5 polled messages).

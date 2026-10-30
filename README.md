@@ -62,9 +62,9 @@ All findings come from observing a real installation (telegram log, 5022 scans, 
 - [x] Optional: gas consumption estimate from burner power (with calibration note) – [docs/behaviour.md](docs/behaviour.md#gas-consumption-estimate)
 
 ### 5. Verification and evidence
-- [ ] Read and add `ebusctl info` / scan result (device identification)
+- [x] Read and add `ebusctl info` / scan result (device identification) – [raw/ebusctl-info.txt](raw/ebusctl-info.txt)
 - [x] Add anonymised raw data: 5022 scan results, sample telegrams ([raw/](raw/))
-- [ ] Compare our 0503 interpretation with the standard eBUS definition
+- [x] Compare with the standard eBUS definitions and the official Wolf file (0503 has no standard definition there; 0507 / 0800 follow the standard) – [docs/standard-comparison.md](docs/standard-comparison.md)
 
 ### 6. Before going public
 - [ ] Privacy check: no IP addresses, URLs, tokens or personal data in files or history
