@@ -29,4 +29,4 @@ All findings come from one installation: eBUS telegram log (ebusd SQLite log), 5
 - Hex values are written as `0x0d` or as byte sequences `08 50 22`.
 - 16-bit values on the bus are little-endian (low byte first).
 - Names in `code style` like `FlowTemp` are the message names of [`config/encon/08.csv`](../config/encon/08.csv).
-- HGxx are the parameter codes of the boiler manual (on the ART partly shown as GBxx).
+- HGxx are the parameter codes of the boiler manual.
