@@ -52,7 +52,7 @@ percent = raw / 2.55. Found by changing HG02 on the ART from 39 to 40 % (0x015a 
 ## Notes on single parameters
 
 - **HG01 / HG08:** in heating mode the burner restarts below `BoilerTempSetpoint` = min(A01, HG08 − HG01) and switches off at `BoilerTempSetpoint` + HG01, i.e. at HG08 at the latest (0800, 5022 0x0002; see [behaviour.md](behaviour.md#burner-shutdown-and-maximum-temperature)).
-- **HG02:** lower modulation limit; the burner also runs at this power during the ~3 min soft start after ignition.
+- **HG02 / HG03 / HG04:** values are % modulation current of the gas valve (0–27 % → 8 kW, 100 % → 18 kW; table in [telegrams.md](telegrams.md#0503--burner-status-broadcast-burnerstatus)), not % of the nominal power. HG02 is the lower modulation limit (at least 8 kW); the burner also runs at this power during the ~3 min soft start after ignition.
 - **HG07:** run-on time of the boiler pump after the **last burner shutdown** (not after the heat demand ends) – see [behaviour.md](behaviour.md#pump-run-on-hg07).
 - **HG09:** applies after every burner shutdown in heating mode – see [behaviour.md](behaviour.md#burner-cycle-lock-hg09).
 - **HG13 = 1:** input E1 = room thermostat. Closed contact releases heating; open contact blocks heating and the heating pump.

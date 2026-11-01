@@ -17,14 +17,22 @@ Passive telegrams that ebusd receives without polling. CSV names in brackets.
 
 `Power` was confirmed with the gas meter: with HG04 = 50 %, heating at 100 % takes about 1.26 m³/h natural gas (≈ 12 kW load), clearly below the full-load value of the data sheet (2.1 m³/h). In chimney sweep mode it shows 100 for the whole run. During normal heating it modulates between about 86 and 100, during hot water between 73 and 91.
 
-**Soft start:** after ignition (mode 6, shortly 100) the burner runs about **180 s at minimum power** and switches off at the earliest after these 3 min. `Power` shows the minimum power relative to HG04, following the power curve of the manual (8 kW from 0 to 27 %, linear to 18 kW at 100 %):
+**Soft start:** after ignition (mode 6, shortly 100) the burner runs about **180 s at minimum power** and switches off at the earliest after these 3 min. `Power` shows the minimum power relative to HG04.
+
+HG02, HG03 and HG04 are **% modulation current** of the gas valve, not % of the 18 kW. The boiler manual gives this table for the CGU-2K-18:
+
+| modulation current (HG value) | 0–27 % | 39 % | 52 % | 65 % | 77 % | 100 % |
+|---|---|---|---|---|---|---|
+| heating power | 8 kW | 10 kW | 12 kW | 14 kW | 16 kW | 18 kW |
+
+`Power` = current power (kW) / maximum power allowed by HG04 (kW):
 
 | HG04 | HG02 | power at HG04 | power at HG02 | expected | observed `Power` in soft start |
 |---|---|---|---|---|---|
-| 50 % | 39 % | 11.15 kW | 9.64 kW | 86 % | **86** |
-| 50 % | 25 % | 11.15 kW | 8.0 kW (curve minimum) | 72 % | **70** |
+| 50 % | 39 % | ~11.7 kW | 10 kW | 86 % | **86** |
+| 50 % | 25 % | ~11.7 kW | 8 kW (minimum) | 68 % | **70** |
 
-This independently confirms that `Power` is relative to HG04 (heating) and that HG02 is the lower modulation limit.
+This independently confirms that `Power` is relative to the maximum power of HG04 (heating) in kW, and that HG02 is the lower modulation limit – at least 8 kW, so HG02 below 27 % has no further effect. (Relative to the modulation current it would be 39/50 = 78 and 25/50 = 50 – does not match.)
 
 ### Operating mode (byte 2)
 
