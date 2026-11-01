@@ -14,7 +14,7 @@ ebusd configuration for the **Wolf CGU-2K-18** (with Wolf ART). Only **reads** v
 3. ebusd scans the boiler, finds manufacturer 0x40 (ENCON) with an empty device ID and loads `encon/08.csv`.
    Check the log for: `read scan config file encon/08.csv for ID ""`.
 
-The file has been checked with ebusd 26.1 (`--checkconfig`) and with 394 real telegrams of the test installation, see [`tests/`](../tests/).
+The file has been checked with ebusd 26.1 (`--checkconfig`) and with 396 real telegrams of the test installation, see [`tests/`](../tests/).
 
 ## Messages
 
@@ -33,6 +33,7 @@ The file has been checked with ebusd 26.1 (`--checkconfig`) and with 394 real te
 | boiler | `BurnerStarts`, `OperatingHours` | 5022 read | ✅ |
 | boiler | `BurnerHours` | 5022 read | 🟡 |
 | boiler | `ErrorHistoryLastStatus`, `ErrorHistoryLastHours` | 5022 read | ✅ (extra byte ❓) |
+| art | `RoomTemp`, `RoomTempSetpoint` (room temperature and knob setpoint of the ART) | 5022 read at the ART (slave 35) | ✅ |
 
 ✅ confirmed · 🟡 probable · ❓ unknown. Details in [`docs/`](../docs/).
 
@@ -53,6 +54,7 @@ Recommended setup:
 |---|---|---|
 | fast | `FlowTemp`, `FlowTemp2`, `HwcTemp`, `ErrorStatus`, `ModulationStatus` | change `r` to `r1` in your copy of the CSV |
 | slow | HG parameters, counters, error history | read on demand, e.g. hourly via `ebusctl read -f <name>` or MQTT `ebusd/boiler/<name>/get` |
+| room | `RoomTemp`, `RoomTempSetpoint` (circuit `art`) | `r5` – changes slowly (measured: 5 × `r1` + 2 × `r2` = one round of 72 s; `r1` every 36 s instead of 30 s) |
 
 Keep the number of polled messages small – the bus is shared with the ART and the boiler.
 

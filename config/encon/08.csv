@@ -3,7 +3,7 @@
 #
 # Device identification: the boiler answers 0704 with manufacturer 0x40 (ENCON) and a non-ASCII device ID
 # (01 1c 00 20 01, no SW/HW version). ebusd therefore reports ID "" and picks encon/08.csv.
-# Addresses: boiler master 03 / slave 08, ART f1 (broadcasts) and 30 (parameter access), ebusd 31.
+# Addresses: boiler master 03 / slave 08, ART f1 (broadcasts) and 30 (parameter access) / slave 35, ebusd 31.
 #
 # Status of each value (see docs/): confirmed = verified by tests; probable = consistent observations, not proven.
 # Unknown numbers are not included.
@@ -24,9 +24,9 @@ u,boiler,BurnerStatus,burner status broadcast (0503 block 1),03,fe,0503,01,Mode,
 # Probable: OutsideTemp (-40 = no outside sensor connected).
 u,boiler,BoilerStatus,boiler status to ART (0800),03,f1,0800,,BoilerTempSetpoint,,D2B,,°C,lower of A01 and HG08 minus HG01 - at least 40 (5 after power-up for ~40 s),OutsideTemp,,D2B,,°C,-40 = no outside sensor (probable),,,IGN:1,,,,OperatingStatus,,UCH,,,bit field: 01 hot water incl. ~60 s run-on / 02 heating active / 04 hot water draw detected / 08 no heat demand (input E1 open) / 10 burner off / 20+40 chimney sweep mode,HwcTempSetpoint,,D2B,,°C,hot water setpoint (echo of ART P03)
 
-# 0507 ART -> boiler (f1 -> 03), every ~10 s. Standard eBUS "burner operational data": status (bb hot water + heating / aa heating only), action,
+# 0507 ART -> boiler (f1 -> 03), every ~10 s. Standard eBUS "burner operational data": status (bb hot water + heating / 55 hot water only / 00 none / aa heating only), action,
 # boiler target temperature (A01 - calculated by the ART from its room control - the boiler limits with HG08), target pressure (n/a), setting degree (n/a), hot water target (P03), fuel.
-u,art,ControllerStatus,ART setpoints to boiler (0507),f1,03,0507,,Status,,UCH,,,bb hot water + heating / aa heating only (chimney sweep mode),,,IGN:1,,,,FlowTempSetpoint,,SIN,16,°C,A01 flow setpoint calculated by the ART (used by the boiler up to HG08 - HG01),,,IGN:3,,,,HwcTempSetpoint,,UCH,2,°C,P03 hot water setpoint,,,IGN:1,,,
+u,art,ControllerStatus,ART setpoints to boiler (0507),f1,03,0507,,Status,,UCH,,,bb hot water + heating / 55 hot water only (room warm enough) / 00 none (economy period) / aa heating only (chimney sweep mode),,,IGN:1,,,,FlowTempSetpoint,,SIN,16,°C,A01 flow setpoint calculated by the ART (used by the boiler up to HG08 - HG01),,,IGN:3,,,,HwcTempSetpoint,,UCH,2,°C,P03 hot water setpoint,,,IGN:1,,,
 
 # 0800 ART -> boiler (f1 -> 03), every ~10 s. Standard eBUS layout "target values of the room controller":
 # boiler target temperature, outside temperature (ART sends 90), forced performance, bits (hot water / heating active), hot water target.
@@ -82,3 +82,9 @@ r,boiler,BurnerHours,burner hours (5022 0x022a; probable),,08,5022,002a02,value,
 # Error history HG80-89: 10 entries of 2 words in 0x022b-0x023e, newest last. Only the newest entry is defined here.
 r,boiler,ErrorHistoryLastStatus,newest error history entry (5022 0x023d),,08,5022,003d02,Code,,UCH,,,error code,Extra,,UCH,,,upper byte - meaning unknown
 r,boiler,ErrorHistoryLastHours,operating hour of the newest error history entry (5022 0x023e),,08,5022,003e02,value,,UIN,,h,compare with OperatingHours
+
+# ---------------------------------------------------------------------------------------------
+# 5022 reads at the ART (slave address 35 = master 30 + 5). Same format as at the boiler.
+# ---------------------------------------------------------------------------------------------
+r,art,RoomTemp,room temperature of the ART sensor (5022 0x0011 at the ART; confirmed - same as the ART display),,35,5022,001100,value,,SIN,10,°C,
+r,art,RoomTempSetpoint,room setpoint of the ART knob - comfort setpoint (5022 0x0005 at the ART; confirmed),,35,5022,000500,value,,SIN,10,°C,

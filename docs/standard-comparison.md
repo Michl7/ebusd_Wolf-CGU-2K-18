@@ -22,7 +22,7 @@ Standard layout vs. observed `bb 04 a0 05 00 80 ff 6e ff`:
 
 | Byte | Standard field | Observed | Meaning |
 |---|---|---|---|
-| 1 | status heat request | `bb` = hwc_heat, `aa` = heat | normal: heating + hot water; chimney sweep mode: heating only |
+| 1 | status heat request | `bb` = hwc_heat, `55` = hwc, `aa` = heat, `00` = none | normal: heating + hot water; room warm enough: hot water only; chimney sweep mode: heating only; economy period: none |
 | 2 | variable consumers (action) | `04` = consumeon | |
 | 3–4 | boiler target temperature (D2C) | 90 °C | = A01 (`FlowTempSetpoint`) |
 | 5–6 | boiler target pressure (D2B) | `00 80` = not available | |
@@ -39,7 +39,7 @@ So the previously unknown bytes 2 and 5–7, 9 are standard fields that the ART 
 | 1–2 | boiler target temperature (D2B) | 90 °C (follows A01) | `BoilerTempSetpoint` = min(A01, HG08 − HG01) |
 | 3–4 | outside temperature (D2B) | 90 | −40 (no sensor) |
 | 5 | forced performance (D1B) | 0 | 0 |
-| 6 | bit 0 hot water active, bit 1 heating active | `0x12` (heating active + bit 4) | `OperatingStatus` |
+| 6 | bit 0 hot water active, bit 1 heating active | `0x12` / `0x10` / `0x00` (bit 1 heating, bit 4 hot water released) | `OperatingStatus` |
 | 7–8 | hot water target temperature (D2B) | P03 | P03 |
 
 - Confirms our reading of the boiler's 0800: bit `0x01` = hot water, bit `0x02` = heating active. The other bits (`0x04` hot water draw, `0x08` no heat demand, `0x10` burner off, `0x20`/`0x40` chimney sweep) are not in the standard – they are boiler specific.

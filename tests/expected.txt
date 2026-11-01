@@ -37,3 +37,5 @@ received read boiler OperatingHours QQ=31: 58861
 received read boiler BurnerHours QQ=31: 2436
 received read boiler ErrorHistoryLastStatus QQ=31: 8;31
 received read boiler ErrorHistoryLastHours QQ=31: 58832
+received read art RoomTemp QQ=31: 24.6
+received read art RoomTempSetpoint QQ=31: 30.0

@@ -80,10 +80,10 @@ Typical values:
 | Bit | Meaning | Status |
 |---|---|---|
 | `0x01` | hot water operation incl. ~60 s run-on after the draw (standard: hot water active) | ✅ |
-| `0x02` | heating active (cleared while hot water has priority; standard: heating active) | ✅ |
+| `0x02` | heating active – set only when input E1 is closed **and** the ART releases heating (0507 `bb`); cleared while hot water has priority (standard: heating active) | ✅ |
 | `0x04` | hot water draw detected (flow sensor, reacts within a second) | ✅ |
 | `0x08` | no heat demand (input E1 open) | ✅ |
-| `0x10` | burner off / not requested | 🟡 |
+| `0x10` | burner off (set in every state without a running burner, cleared while it runs) | ✅ |
 | `0x20`, `0x40` | chimney sweep mode (only seen together) | 🟡 |
 
 Observed values:
@@ -98,6 +98,9 @@ Observed values:
 | 25 | `0x19` | hot water run-on |
 | 5 | `0x05` | hot water draw during heat demand (hot water priority) |
 | 19 | `0x13` | hot water run-on during heat demand |
+| 16 | `0x10` | E1 closed, but heating blocked by the ART (0507 `55` or `00`) |
+| 17 | `0x11` | hot water run-on, heating blocked by the ART |
+| 21 | `0x15` | hot water draw, burner not yet on, heating blocked by the ART |
 | 104 | `0x68` | chimney sweep mode (without heat demand) |
 
 The fault state is **not** shown in this bit field.
@@ -108,8 +111,8 @@ The fault state is **not** shown in this bit field.
 
 | Byte | Field | Meaning | Status |
 |---|---|---|---|
-| 1 | `Status` | status heat request: `bb` = hot water + heating (normal), `aa` = heating only (chimney sweep mode) | ✅ |
-| 2 | – | action: `04` = consumers on | ✅ (standard) |
+| 1 | `Status` | status heat request (standard values): `bb` = hot water + heating, `55` = hot water only (room warm enough, see [behaviour.md](behaviour.md#art-room-temperature-control)), `00` = nothing (economy period), `aa` = heating only (chimney sweep mode) | ✅ |
+| 2 | – | action: `04` = consumers on; `03` during the economy period | ✅ (standard) / 🟡 |
 | 3–4 | `FlowTempSetpoint` (SIN / 16 = D2C) | A01 flow setpoint **calculated by the ART** from its room temperature control (90 °C = maximum when the room is well below the setpoint). The boiler uses it: `BoilerTempSetpoint` = min(A01, HG08 − HG01) | ✅ |
 | 5–6 | – | target pressure, `00 80` = not available | ✅ (standard) |
 | 7 | – | setting degree, `ff` = not available | ✅ (standard) |
@@ -122,10 +125,10 @@ The fault state is **not** shown in this bit field.
 
 | Bytes | Field | Meaning | Status |
 |---|---|---|---|
-| 1–2 | `FlowTempSetpoint` (D2B) | boiler target temperature: 90 normally, 5 in chimney sweep mode; follows A01 when the ART knob is turned (e.g. 68.7 / 83 °C) | ✅ |
+| 1–2 | `FlowTempSetpoint` (D2B) | boiler target temperature = A01 (5 in chimney sweep mode and in the economy period) | ✅ |
 | 3–4 | – | outside temperature field – the ART sends 90 (it has no outside sensor) | 🟡 |
 | 5 | – | forced performance, 0 | ✅ (standard) |
-| 6 | – | `0x12`: bit 1 heating active, bit 4 unknown | 🟡 |
+| 6 | – | bit field: `0x02` heating released, `0x10` hot water released – `0x12` normal (0507 `bb`), `0x10` hot water only (`55`), `0x00` economy period (`00`) | ✅ / 🟡 (`0x10`) |
 | 7–8 | `HwcTempSetpoint` (D2B) | P03 (changes immediately when P03 is turned on the ART) | ✅ |
 
 Changing P03 on the ART does **not** send a write command (5023): the new value is only sent in 0507 and 0800, and the boiler takes it over after 10–15 s (its 0800 `HwcTempSetpoint` and 5022 0x0003 follow).

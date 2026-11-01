@@ -19,6 +19,7 @@ The heat demand of this installation does **not** come over the eBUS: a room the
 | 08 | boiler (slave) | answers 5022 reads and 0704 identification |
 | f1 | ART (master) | 0507 and 0800 to the boiler (every ~10 s), 0704 identification of the boiler (every minute) |
 | 30 | ART (second master address) | parameter access: reads with 5022 and writes with 5023 while the parameter menu is open |
+| 35 | ART (slave of 30) | answers 5022 reads (room temperature / setpoints, see [5022-reference.md](5022-reference.md#5022-at-the-art-slave-address-35)); answers 0704 with an empty identification |
 | f6 | – | queried by the ART at start-up, no device answers |
 | 31 | ebusd | 5022 reads |
 

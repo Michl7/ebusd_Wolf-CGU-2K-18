@@ -98,6 +98,24 @@ Format of the error history: see [errors.md](errors.md#error-history-hg8089).
 
 0x0167 = 27 might be the lower modulation limit (manual: minimum power 8 kW between 0 and 27 %).
 
+## 5022 at the ART (slave address 35)
+
+The ART also answers 5022 reads, as slave **35** (its master address 30 + 5). Same request and answer format; scan of 0x0000–0x03ff and 0x0a00–0x0aff in [`raw/scan/5022_art35_0000-03ff_0a00-0aff.txt`](../raw/scan/5022_art35_0000-03ff_0a00-0aff.txt).
+
+| Number | CSV name | Encoding | Meaning | Status |
+|---|---|---|---|---|
+| 0x0004 | – | / 10 °C | A01 flow setpoint (same as 0507) | 🟡 |
+| 0x0005 | `RoomTempSetpoint` | / 10 °C | room setpoint of the knob (comfort setpoint – stays unchanged during the economy period) | ✅ |
+| 0x0008 | – | / 10 °C | economy room temperature (changed 18 → 19 °C on the ART, value followed) | ✅ |
+| 0x000c | – | / 10 °C | outside temperature, −40.0 = no sensor | 🟡 |
+| 0x0011 | `RoomTemp` | / 10 °C | room temperature of the ART sensor (same as the ART display) | ✅ |
+| 0x0013 | – | / 10 °C | P03 hot water setpoint | 🟡 |
+| 0x0058 / 0x0059 / 0x005a / 0x0066 | – | integer | 2 / 0 / 3 / 1 | ❓ |
+| 0x0101, 0x010f, 0x0126, 0x017d | – | integer | 0 | ❓ |
+| 0x010e / 0x0125 / 0x017e | – | integer | 120 / 11 / 1 | ❓ |
+
+The ART sensor read 1.0–1.4 K higher than other room sensors on the test installation (mounting position).
+
 ## 5023 – parameter write (reference only)
 
 > ⚠️ **Not included in the configuration and never sent by us.** Observed only when the ART saved a parameter. Wrong values can make the boiler malfunction. Parameter changes belong to a qualified heating engineer.

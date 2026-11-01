@@ -2,6 +2,10 @@
 
 Example setup with the ebusd app (add-on) and MQTT discovery. The templates were tested on the test installation (template preview with the real values; results identical to the sensors running there). The automations are English versions of the automations running there.
 
+> **Heating setup of the test installation – read this first.** The heat demand comes from a separate room thermostat (controlled by Home Assistant) wired to input **E1** of the boiler (HG13 = 1), **not** from the ART. The ART only provides the hot water setpoint and the parameter menu; its room setpoint is set to **30 °C**, so it always requests heating (0507 status `bb`, A01 = 90 °C) and never blocks the boiler. The boiler therefore limits the flow temperature with HG08 only.
+>
+> The template texts follow this setup: "Heat demand" means E1 closed, "Standby" means E1 open. If the ART controls the room temperature itself (lower room setpoint, no E1 thermostat), A01 drops close to the setpoint, the ART can block heating ("Heat demand, blocked by the ART"), and input E1 must then not block heating (see the boiler manual for HG13) – see [ART room temperature control](../../docs/behaviour.md#art-room-temperature-control).
+
 ## 1. ebusd app
 
 - Install the **eBUSd** app (repository LukasGrebe/ha-addons) and the MQTT broker (Mosquitto).
@@ -31,6 +35,7 @@ Notes:
 - `ErrorBroadcast` (text) is not created – the default `mqtt-hassio.cfg` skips text fields. Use `ErrorStatus`.
 - HG02–HG04 are raw values (0–255); percent = raw / 2.55.
 - Values that are only read on demand appear after the first read (see step 3).
+- The ART values `RoomTemp` / `RoomTempSetpoint` belong to the device **ebusd art** (`sensor.ebusd_art_roomtemp`, `sensor.ebusd_art_roomtempsetpoint`). Change them to `r5` in your copy of the CSV to have them polled (about every 3 min).
 
 ## 3. Read the slow values
 
@@ -45,7 +50,7 @@ Create them as template helpers (*Settings → Devices & services → Helpers �
 | File | Sensor | Unit / class |
 |---|---|---|
 | [`templates/operating_mode.jinja`](templates/operating_mode.jinja) | operating mode as text (Off, Start phase, Ignition, Burner on, Fault, Shutdown phase) | – |
-| [`templates/operating_status.jinja`](templates/operating_status.jinja) | 0800 operating status as text (Standby, Heating, Heating burner pause, Hot water draw, …) | – |
+| [`templates/operating_status.jinja`](templates/operating_status.jinja) | 0800 operating status as text (Standby, Heating, Heating burner pause, Heat demand blocked by the ART, Hot water draw, …) | – |
 | [`templates/error.jinja`](templates/error.jinja) | current error with text, e.g. `Error 8: Flue gas damper does not switch` | – |
 | [`templates/last_error.jinja`](templates/last_error.jinja) | newest error history entry with approximate time | – |
 | [`templates/gas_heating.jinja`](templates/gas_heating.jinja) | estimated gas flow heating | m³/h, volume flow rate, measurement |

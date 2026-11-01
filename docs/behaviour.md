@@ -36,6 +36,7 @@ Observations of the test installation (HG08 = 70 °C, later 80 °C; HG01 = 8 K; 
 
 - With pump mode HG06 = 0 the pump runs during heat demand and runs on for **HG07 = 30 min after the last burner shutdown** – not after the heat demand ends (6 cases, 29:30–29:56 min between mode 10 and status bits `0x01`).
 - After hot water operation the pump runs on only about **60 s**.
+- When the ART blocks heating (0507 `55`, see below), the pump does not start even with E1 closed – but a running HG07 run-on is **not** interrupted (pump off 29:49 min after the burner, although the ART had switched to `55` after 6.5 min).
 
 ## Hot water
 
@@ -61,6 +62,18 @@ Observations of the test installation (HG08 = 70 °C, later 80 °C; HG01 = 8 K; 
 | ~40 s | 0800 reports `BoilerTempSetpoint` = 5 °C and `HwcTempSetpoint` = 53 °C, then the normal values |
 
 Parameters, counters and the error history are kept. No fe01 is sent. → Ignore the first ~40 s of 0800 values after a power-up in automations.
+
+## ART room temperature control
+
+The ART measures the room temperature itself and acts as a room controller **in addition** to input E1. Observed with E1 permanently closed, ART room setpoint 23.5–24 °C:
+
+- **Flow setpoint A01** ≈ 65 °C + 20 K × (room setpoint − room temperature), limited to 5…90 °C. It changes in steps of 2 K per 0.1 K and follows the room temperature without delay in both directions (proportional only, no integral part). Data points: +1.5 K → 90, +0.5 K → 75, 0 K → 65, −0.5 K → 55, −1 K → 45.
+- **Switching:** heating is released (0507 `bb`) when the room temperature falls to the setpoint, and blocked (0507 `55` = hot water only, the ART manual calls it "summer mode") when it rises above setpoint + 0.5 K. While blocked, the boiler does **not** heat even though E1 is closed (0800 operating status 16).
+- **Economy period** (day program of the ART, economy temperature): 0507 `00 03 …`, A01 = 5 °C, no heating; `BoilerTempSetpoint` 40 °C. Instantaneous hot water still works.
+- The boiler uses A01: it switches off at min(A01 + HG01, HG08) – see [Burner shutdown](#burner-shutdown-and-maximum-temperature). With the room close to the setpoint, the burner runs at lower flow temperatures and shorter.
+- Typical sequence after the economy period: one long run up to HG08, then short runs (3 min soft start, 7 min cycle lock) at decreasing switch-off temperatures, until the room is 0.5 K above the setpoint.
+
+If the heat demand is controlled externally via E1 (as on the test installation), set the ART room setpoint high enough (e.g. 30 °C): then A01 stays at 90 °C and the ART never blocks heating.
 
 ## Gas consumption (estimate)
 

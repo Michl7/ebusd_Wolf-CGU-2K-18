@@ -1,0 +1,21 @@
+# 5022 scan of the ART room controller (slave address 35), read only
+# Command: ebusctl hex 35502203 00 LL HH  - ranges 0x0000-0x03ff and 0x0a00-0x0aff
+# Only numbers with an answer other than 020080 (not available). Format: number (HHLL) answer (NN LL HH)
+# At scan time: ART room setpoint knob 30.0 °C / room temperature at the ART 24.6 °C / A01 90 °C / P03 55 °C / economy temperature 18 °C
+0004 028403
+0005 022c01
+0008 02b400
+000c 0270fe
+0011 02f600
+0013 022602
+0058 020200
+0059 020000
+005a 020300
+0066 020100
+0101 020000
+010e 027800
+010f 020000
+0125 020b00
+0126 020000
+017d 020000
+017e 020100
