@@ -51,7 +51,8 @@ percent = raw / 2.55. Found by changing HG02 on the ART from 39 to 40 % (0x015a 
 
 ## Notes on single parameters
 
-- **HG01 / HG08:** in heating mode the burner switches off at HG08 and restarts below HG08 − HG01. The boiler sends HG08 − HG01 as `BoilerTempSetpoint` (0800, 5022 0x0002).
+- **HG01 / HG08:** in heating mode the burner restarts below `BoilerTempSetpoint` = min(A01, HG08 − HG01) and switches off at `BoilerTempSetpoint` + HG01, i.e. at HG08 at the latest (0800, 5022 0x0002; see [behaviour.md](behaviour.md#burner-shutdown-and-maximum-temperature)).
+- **HG02:** lower modulation limit; the burner also runs at this power during the ~3 min soft start after ignition.
 - **HG07:** run-on time of the boiler pump after the **last burner shutdown** (not after the heat demand ends) – see [behaviour.md](behaviour.md#pump-run-on-hg07).
 - **HG09:** applies after every burner shutdown in heating mode – see [behaviour.md](behaviour.md#burner-cycle-lock-hg09).
 - **HG13 = 1:** input E1 = room thermostat. Closed contact releases heating; open contact blocks heating and the heating pump.
@@ -66,6 +67,6 @@ percent = raw / 2.55. Found by changing HG02 on the ART from 39 to 40 % (0x015a 
 | storage charging | not active – the boiler may get hotter | the absolute upper limit |
 | factory setting | 80 °C | 80 °C (enough e.g. for a storage setpoint of 60 °C + HG25 = 20 K) |
 
-So HG08 ≤ HG22. Without a storage tank, HG08 is the limit seen in practice (switch-off at 69–70 °C with HG08 = 70 °C). During hot water draws the flow reached 67–70 °C, below HG22.
+So HG08 ≤ HG22. Without a storage tank, HG08 is the upper limit seen in practice (switch-off at 69–70 °C with HG08 = 70 °C); a lower A01 from the ART switches off earlier. During hot water draws the flow reached 67–70 °C, below HG22.
 
 **HG21 (TK-min):** minimum switch-on temperature – if the boiler temperature falls below it **during a heat demand**, the burner starts (after the cycle lock). Without heat demand the boiler may cool down below it. Frost protection: if the boiler water falls below +5 °C, the burner heats at least up to TK-min.

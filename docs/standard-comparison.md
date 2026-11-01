@@ -36,7 +36,7 @@ So the previously unknown bytes 2 and 5–7, 9 are standard fields that the ART 
 
 | Bytes | Standard field | ART → boiler | Boiler → ART |
 |---|---|---|---|
-| 1–2 | boiler target temperature (D2B) | 90 °C (follows A01) | `BoilerTempSetpoint` = HG08 − HG01 |
+| 1–2 | boiler target temperature (D2B) | 90 °C (follows A01) | `BoilerTempSetpoint` = min(A01, HG08 − HG01) |
 | 3–4 | outside temperature (D2B) | 90 | −40 (no sensor) |
 | 5 | forced performance (D1B) | 0 | 0 |
 | 6 | bit 0 hot water active, bit 1 heating active | `0x12` (heating active + bit 4) | `OperatingStatus` |

@@ -11,13 +11,20 @@ Passive telegrams that ebusd receives without polling. CSV names in brackets.
 | 1 | block | always `01` | ✅ |
 | 2 | `Mode` | operating mode, see below | ✅ |
 | 3 | `StatusBits` | bit field, see below | ✅ / 🟡 |
-| 4 | `Power` | burner power in % **relative to the allowed maximum** (HG04 heating, HG03 hot water) | ✅ |
+| 4 | `Power` | burner power in % **relative to the allowed maximum** (HG04 heating, HG03 hot water); lower limit = HG02 (soft start, see below) | ✅ |
 | 5 | `FlowTemp` | flow temperature 1, UCH / 2 °C (same as 5022 0x000d) | ✅ |
 | 6–8 | – | always `80 ff d8` | 🟡 (probably "no sensor") |
 
 `Power` was confirmed with the gas meter: with HG04 = 50 %, heating at 100 % takes about 1.26 m³/h natural gas (≈ 12 kW load), clearly below the full-load value of the data sheet (2.1 m³/h). In chimney sweep mode it shows 100 for the whole run. During normal heating it modulates between about 86 and 100, during hot water between 73 and 91.
 
-Open contradiction: according to the manual the burner starts with minimum power for ~180 s (soft start), but byte 4 shows 100 right after ignition.
+**Soft start:** after ignition (mode 6, shortly 100) the burner runs about **180 s at minimum power** and switches off at the earliest after these 3 min. `Power` shows the minimum power relative to HG04, following the power curve of the manual (8 kW from 0 to 27 %, linear to 18 kW at 100 %):
+
+| HG04 | HG02 | power at HG04 | power at HG02 | expected | observed `Power` in soft start |
+|---|---|---|---|---|---|
+| 50 % | 39 % | 11.15 kW | 9.64 kW | 86 % | **86** |
+| 50 % | 25 % | 11.15 kW | 8.0 kW (curve minimum) | 72 % | **70** |
+
+This independently confirms that `Power` is relative to HG04 (heating) and that HG02 is the lower modulation limit.
 
 ### Operating mode (byte 2)
 
@@ -62,7 +69,7 @@ Typical values:
 
 | Bytes | Field | Normal | Chimney sweep | Meaning | Status |
 |---|---|---|---|---|---|
-| 1–2 | `BoilerTempSetpoint` (D2B) | 62 °C | 40 °C | **HG08 − HG01** (restart point); also 5022 0x0002 | ✅ |
+| 1–2 | `BoilerTempSetpoint` (D2B) | 62 °C | 40 °C | **min(A01, HG08 − HG01)**, at least 40 °C – burner restarts below it and switches off at it + HG01 (see [behaviour.md](behaviour.md#burner-shutdown-and-maximum-temperature)); also 5022 0x0002 | ✅ |
 | 3–4 | `OutsideTemp` (D2B) | −40 °C | −40 °C | no outside sensor connected; also 5022 0x000c | 🟡 |
 | 5 | – | `00` | `00` | forced performance (standard field) | ✅ |
 | 6 | `OperatingStatus` | 24 | 104 | bit field, see below | ✅ |
@@ -103,7 +110,7 @@ The fault state is **not** shown in this bit field.
 |---|---|---|---|
 | 1 | `Status` | status heat request: `bb` = hot water + heating (normal), `aa` = heating only (chimney sweep mode) | ✅ |
 | 2 | – | action: `04` = consumers on | ✅ (standard) |
-| 3–4 | `FlowTempSetpoint` (SIN / 16 = D2C) | A01 boiler target temperature, 90 °C on the test installation – **not** the effective setpoint (the boiler limits with HG08). Changes when the temperature knob of the ART is turned (e.g. 83 °C) – relation still being investigated | ✅ / 🟡 |
+| 3–4 | `FlowTempSetpoint` (SIN / 16 = D2C) | A01 flow setpoint **calculated by the ART** from its room temperature control (90 °C = maximum when the room is well below the setpoint). The boiler uses it: `BoilerTempSetpoint` = min(A01, HG08 − HG01) | ✅ |
 | 5–6 | – | target pressure, `00 80` = not available | ✅ (standard) |
 | 7 | – | setting degree, `ff` = not available | ✅ (standard) |
 | 8 | `HwcTempSetpoint` (UCH / 2) | P03 hot water setpoint | ✅ |

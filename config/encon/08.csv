@@ -20,13 +20,13 @@
 # Probable: StatusBits 08 = flame, 30 = gas valves. Mode 3/5 = start phase steps (exact meaning open).
 u,boiler,BurnerStatus,burner status broadcast (0503 block 1),03,fe,0503,01,Mode,,UCH,,,0 off / 3 + 5 start phase / 6 ignition / 7 burner on / 8 fault / 10 shutdown phase,StatusBits,,UCH,,,bit field: 01 always / 04 hot water / 08 flame / 30 gas valves / 40 pump / 80 fault,Power,,UCH,,%,burner power relative to the allowed maximum (HG04 heating / HG03 hot water),FlowTemp,,UCH,2,°C,flow temperature 1 (same as FlowTemp read),,,IGN:3,,,constant 80 ff d8
 
-# 0800 boiler -> ART (03 -> f1). Confirmed: BoilerTempSetpoint = HG08 - HG01, OperatingStatus bit field, HwcTempSetpoint = echo of P03.
+# 0800 boiler -> ART (03 -> f1). Confirmed: BoilerTempSetpoint = lower of A01 and HG08 - HG01 (burner off at BoilerTempSetpoint + HG01), OperatingStatus bit field, HwcTempSetpoint = echo of P03.
 # Probable: OutsideTemp (-40 = no outside sensor connected).
-u,boiler,BoilerStatus,boiler status to ART (0800),03,f1,0800,,BoilerTempSetpoint,,D2B,,°C,HG08 minus HG01 (5 after power-up for ~40 s; 40 in chimney sweep mode),OutsideTemp,,D2B,,°C,-40 = no outside sensor (probable),,,IGN:1,,,,OperatingStatus,,UCH,,,bit field: 01 hot water incl. ~60 s run-on / 02 heating active / 04 hot water draw detected / 08 no heat demand (input E1 open) / 10 burner off / 20+40 chimney sweep mode,HwcTempSetpoint,,D2B,,°C,hot water setpoint (echo of ART P03)
+u,boiler,BoilerStatus,boiler status to ART (0800),03,f1,0800,,BoilerTempSetpoint,,D2B,,°C,lower of A01 and HG08 minus HG01 - at least 40 (5 after power-up for ~40 s),OutsideTemp,,D2B,,°C,-40 = no outside sensor (probable),,,IGN:1,,,,OperatingStatus,,UCH,,,bit field: 01 hot water incl. ~60 s run-on / 02 heating active / 04 hot water draw detected / 08 no heat demand (input E1 open) / 10 burner off / 20+40 chimney sweep mode,HwcTempSetpoint,,D2B,,°C,hot water setpoint (echo of ART P03)
 
 # 0507 ART -> boiler (f1 -> 03), every ~10 s. Standard eBUS "burner operational data": status (bb hot water + heating / aa heating only), action,
-# boiler target temperature (A01 - the boiler limits with HG08), target pressure (n/a), setting degree (n/a), hot water target (P03), fuel.
-u,art,ControllerStatus,ART setpoints to boiler (0507),f1,03,0507,,Status,,UCH,,,bb hot water + heating / aa heating only (chimney sweep mode),,,IGN:1,,,,FlowTempSetpoint,,SIN,16,°C,A01 (maximum - not the effective setpoint),,,IGN:3,,,,HwcTempSetpoint,,UCH,2,°C,P03 hot water setpoint,,,IGN:1,,,
+# boiler target temperature (A01 - calculated by the ART from its room control - the boiler limits with HG08), target pressure (n/a), setting degree (n/a), hot water target (P03), fuel.
+u,art,ControllerStatus,ART setpoints to boiler (0507),f1,03,0507,,Status,,UCH,,,bb hot water + heating / aa heating only (chimney sweep mode),,,IGN:1,,,,FlowTempSetpoint,,SIN,16,°C,A01 flow setpoint calculated by the ART (used by the boiler up to HG08 - HG01),,,IGN:3,,,,HwcTempSetpoint,,UCH,2,°C,P03 hot water setpoint,,,IGN:1,,,
 
 # 0800 ART -> boiler (f1 -> 03), every ~10 s. Standard eBUS layout "target values of the room controller":
 # boiler target temperature, outside temperature (ART sends 90), forced performance, bits (hot water / heating active), hot water target.

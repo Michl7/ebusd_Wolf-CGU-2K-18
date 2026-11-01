@@ -24,7 +24,7 @@ Scanned ranges (read only): `0x0000–0x04ff` and `0x0a00–0x0aff`, raw data in
 | Number | CSV name | Encoding | Meaning | Status |
 |---|---|---|---|---|
 | 0x0001 | `ErrorStatus` | integer | current error code, 0 = no error (8 during the E008 test) | ✅ |
-| 0x0002 | `BoilerTempSetpoint` | / 10 °C | HG08 − HG01, same as 0800 byte 1–2 | ✅ |
+| 0x0002 | `BoilerTempSetpoint` | / 10 °C | min(A01, HG08 − HG01), at least 40 °C; same as 0800 byte 1–2 | ✅ |
 | 0x0003 | `HwcTempSetpoint` | / 10 °C | hot water setpoint P03 | ✅ |
 | 0x000c | `OutsideTemp` | / 10 °C | −40.0 = no outside sensor | 🟡 |
 | 0x000d | `FlowTemp` | / 10 °C | flow temperature 1 (A02 on the ART, same as 0503 byte 5) | ✅ |

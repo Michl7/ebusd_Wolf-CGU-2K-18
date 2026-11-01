@@ -16,7 +16,6 @@ Unconfirmed (🟡) and unknown (❓) values. Observations from other installatio
 | 0503 bytes 6–8 `80 ff d8` | constant, probably "no sensor" | |
 | 0800 bits `0x10`, `0x20`/`0x40` | burner off, chimney sweep | `0x20` and `0x40` only seen together (bit `0x02` is the standard "heating active" bit) |
 | 5022 0x0178 / 0x016a / 0x016b / 0x001f (HG10 / HG11 / HG12 / HG21) | numbers from the official Wolf file, values = factory settings | changing HG11 or HG21 with a service tool and reading back |
-| ART 0507 A01 / 0800 value 1 | flow setpoint, depends on the ART temperature knob | turn the knob in steps and compare; check whether the boiler reacts |
 
 ## Unknown (❓)
 
@@ -36,5 +35,4 @@ See [standard-comparison.md](standard-comparison.md): 0507 and 0800 follow the e
 
 ## Open contradictions
 
-- **Soft start:** the manual describes ~180 s with minimum power after ignition, but 0503 `Power` shows 100 % right after ignition.
 - **Hot water limit:** the flow is held at ~65 °C during hot water draws; HG08 does not apply to hot water and HG23 only to storage tanks.

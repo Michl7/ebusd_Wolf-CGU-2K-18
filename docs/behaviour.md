@@ -1,6 +1,6 @@
 # Observed behaviour
 
-Observations of the test installation (HG08 = 70 °C, HG01 = 8 K, HG07 = 30 min, HG09 = 7 min, P03 = 55 °C, heat demand via input E1).
+Observations of the test installation (HG08 = 70 °C, later 80 °C; HG01 = 8 K; HG02 = 39 %, later 25 %; HG07 = 30 min, HG09 = 7 min, P03 = 55 °C, heat demand via input E1).
 
 ## Burner start
 
@@ -8,10 +8,20 @@ Observations of the test installation (HG08 = 70 °C, HG01 = 8 K, HG07 = 30 min,
 - Start steps seen in 0503: mode 3 (~25 s, pump only), mode 5 (~20 s, gas valves without flame), mode 6 (ignition, ~20 s), then mode 7. Because 0503 comes only every 20 s, usually only one of these steps is captured per start.
 - Once a hot water start was aborted in mode 5 (status `0x75`) and went directly to the shutdown phase 10 without flame (short draw).
 - Heating: flow rises about 4 K/min at full power.
+- **Soft start:** after ignition the burner runs about 180 s at minimum power (HG02, `Power` 86 with HG02 = 39 %, 70 with HG02 = 25 %) and then modulates up. It does not switch off before these 3 min, even when the switch-off temperature is already reached (two runs of exactly 3:00 min).
 
 ## Burner shutdown and maximum temperature
 
-- In heating mode the burner switches off at **HG08** (seen at 65 °C with HG08 = 65 and at 69–70 °C with HG08 = 70; the chimney sweep mode also ended at HG08).
+- In heating mode the burner **restarts below `BoilerTempSetpoint`** (after the cycle lock) and **switches off at `BoilerTempSetpoint` + HG01**, with `BoilerTempSetpoint` = min(A01, HG08 − HG01). So the switch-off temperature is **min(A01 + HG01, HG08)**:
+
+| HG08 | A01 | `BoilerTempSetpoint` | switch-off expected | observed |
+|---|---|---|---|---|
+| 80 °C | 75–77 °C | 72 °C | 80 °C | 79 °C |
+| 80 °C | 61 °C | 61 °C | 69 °C | 71 °C |
+| 80 °C | 55 °C | 55 °C | 63 °C | 68 °C (held by the 3-min soft start) |
+| 70 °C | 90 °C | 62 °C | 70 °C | 69–70 °C (many runs) |
+
+  With A01 = 90 °C (ART setpoint far above the room temperature) HG08 is the limit; with A01 lower the ART limits the flow temperature. The chimney sweep mode ended at HG08.
 - Mode 10 (shutdown phase) lasts about 40 s.
 - HG08 does **not** apply to hot water: during draws the flow reached 67–70 °C. See [parameters.md](parameters.md#hg08-vs-hg22--two-maximum-temperatures).
 
